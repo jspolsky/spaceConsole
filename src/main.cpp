@@ -1,21 +1,29 @@
 
 #include <Arduino.h>
+#include "Util.h"
 #include "led.h"
 #include "encoder.h"
+#include "oled.h"
 
 void setup()
 {
 
-  Serial.begin(512000);
-  while (!Serial)
-    ;
+  Util::setup();
+  Led::setup();
+  Encoder::setup();
+  OLED::setup();
+  OLED::status(0, "Space Console 1.0");
 
-  led_setup();
-  encoder_setup();
+  pinMode(13, OUTPUT);
 }
 
 void loop()
 {
-  uint32_t encoder_pos = encoder_loop();
-  led_loop(encoder_pos);
+  uint32_t absolute;
+  Encoder::loop(absolute);
+  Led::loop(absolute);
+
+  char s[16];
+  itoa(absolute, s, 10);
+  OLED::status(1, s);
 }

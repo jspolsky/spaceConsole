@@ -1,4 +1,7 @@
 #pragma once
 
-void encoder_setup();
-unsigned long encoder_loop();
+namespace Encoder
+{
+    void setup();
+    void loop(uint32_t &absolute);
+}; // namespace Encoder

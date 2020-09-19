@@ -39,7 +39,6 @@ namespace Led
   void setup()
   {
     octo.begin();
-    dbgprintf("octo is at %x\n", &octo);
     pcontroller = new CTeensy4Controller<RGB, WS2811_800kHz>(&octo, drawingMemory);
 
     FastLED.setBrightness(255);
@@ -79,7 +78,7 @@ namespace Led
       rgbarray[i + 1200] = CRGB::Black;
     }
 
-    FastLED.delay(1);
+    FastLED.show();
   }
 
 }; // namespace Led

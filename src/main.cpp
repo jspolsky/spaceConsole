@@ -1,5 +1,7 @@
 
 #include <Arduino.h>
+#define FASTLED_INTERNAL
+#include <FastLED.h>
 #include "Util.h"
 #include "led.h"
 #include "encoder.h"
@@ -25,5 +27,9 @@ void loop()
 
   char s[16];
   itoa(absolute, s, 10);
-  OLED::status(1, s);
+  EVERY_N_MILLISECONDS(500)
+  {
+    // updating the oled is super slow
+    OLED::status(1, s);
+  }
 }

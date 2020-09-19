@@ -5,6 +5,8 @@
 #include "encoder.h"
 #include "oled.h"
 
+char *itoa(int value, char *str, int base);
+
 void setup()
 {
 
@@ -13,8 +15,6 @@ void setup()
   Encoder::setup();
   OLED::setup();
   OLED::status(0, "Space Console 1.0");
-
-  pinMode(13, OUTPUT);
 }
 
 void loop()

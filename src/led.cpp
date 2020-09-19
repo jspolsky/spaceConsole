@@ -1,7 +1,10 @@
 
 #include <Arduino.h>
 #include <OctoWS2811.h>
-
+#define FASTLED_INTERNAL
+#include <FastLED.h>
+#include "Teensy4Controller.h"
+#include "Util.h"
 #include "led.h"
 
 namespace Led
@@ -16,12 +19,12 @@ namespace Led
 #define WHITE 0xFFFFFF
 #define BROWN 0x654321
 
-  const int numPins = 8;
-  byte pinList[numPins] = {33, 34, 35, 36, 37, 38, 39, 40};
-
   uint32_t rgColors[8] = {WHITE, RED, GREEN, BLUE, YELLOW, PINK, ORANGE, BROWN};
 
+  const int numPins = 8;
+  byte pinList[numPins] = {33, 34, 35, 36, 37, 38, 39, 40};
   const int ledsPerStrip = 300;
+  CRGB rgbarray[numPins * ledsPerStrip];
 
   // These buffers need to be large enough for all the pixels.
   // The total number of pixels is "ledsPerStrip * numPins".
@@ -30,13 +33,17 @@ namespace Led
   // so the compiler will align it to 32 bit memory.
   DMAMEM int displayMemory[ledsPerStrip * numPins * 3 / 4];
   int drawingMemory[ledsPerStrip * numPins * 3 / 4];
-  const int config = WS2811_RGB | WS2811_800kHz;
-  OctoWS2811 leds(ledsPerStrip, displayMemory, drawingMemory, config, numPins, pinList);
+  OctoWS2811 octo(ledsPerStrip, displayMemory, drawingMemory, WS2811_RGB | WS2811_800kHz, numPins, pinList);
+  CTeensy4Controller<RGB, WS2811_800kHz> *pcontroller;
 
   void setup()
   {
-    leds.begin();
-    leds.show();
+    octo.begin();
+    dbgprintf("octo is at %x\n", &octo);
+    pcontroller = new CTeensy4Controller<RGB, WS2811_800kHz>(&octo, drawingMemory);
+
+    FastLED.setBrightness(255);
+    FastLED.addLeds(pcontroller, rgbarray, numPins * ledsPerStrip);
   }
 
   void loop(uint32_t encoder_pos)
@@ -63,16 +70,16 @@ namespace Led
 
     for (uint32_t i = 0; i < height; i++)
     {
-      leds.setPixel(i, color);
-      leds.setPixel(i + 1200, color);
+      rgbarray[i] = color;
+      rgbarray[i + 1200] = color;
     }
     for (uint32_t i = height; i < 1200; i++)
     {
-      leds.setPixel(i, 0);
-      leds.setPixel(i + 1200, 0);
+      rgbarray[i] = CRGB::Black;
+      rgbarray[i + 1200] = CRGB::Black;
     }
 
-    leds.show();
+    FastLED.delay(1);
   }
 
 }; // namespace Led

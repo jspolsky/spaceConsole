@@ -6,6 +6,8 @@
 #include "Util.h"
 #include "oled.h"
 
+size_t strlcpy(char *dst, const char *src, size_t size);
+
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
 #define SCREEN_I2C_ADDR 0x3C

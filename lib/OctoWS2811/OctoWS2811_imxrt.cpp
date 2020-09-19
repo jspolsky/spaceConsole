@@ -26,21 +26,21 @@
 
 #if defined(__IMXRT1062__)
 
-#define TH_TL	1.25e-6
-#define T0H	0.30e-6
-#define T1H	0.75e-6
+#define TH_TL 1.25e-6
+#define T0H 0.30e-6
+#define T1H 0.75e-6
 
 // Ordinary RGB data is converted to GPIO bitmasks on-the-fly using
 // a transmit buffer sized for 2 DMA transfers.  The larger this setting,
 // the more interrupt latency OctoWS2811 can tolerate, but the transmit
 // buffer grows in size.  For good performance, the buffer should be kept
 // smaller than the half the Cortex-M7 data cache.
-#define BYTES_PER_DMA	40
+#define BYTES_PER_DMA 40
 
 uint8_t OctoWS2811::defaultPinList[8] = {2, 14, 7, 8, 6, 20, 21, 5};
 uint16_t OctoWS2811::stripLen;
-void * OctoWS2811::frameBuffer;
-void * OctoWS2811::drawBuffer;
+void *OctoWS2811::frameBuffer;
+void *OctoWS2811::drawBuffer;
 uint8_t OctoWS2811::params;
 DMAChannel OctoWS2811::dma1;
 DMAChannel OctoWS2811::dma2;
@@ -54,8 +54,8 @@ static uint8_t pin_bitnum[NUM_DIGITAL_PINS];
 static uint8_t pin_offset[NUM_DIGITAL_PINS];
 
 static uint16_t comp1load[3];
-DMAMEM static uint32_t bitmask[4] __attribute__ ((used, aligned(32)));
-DMAMEM static uint32_t bitdata[BYTES_PER_DMA*64] __attribute__ ((used, aligned(32)));
+DMAMEM static uint32_t bitmask[4] __attribute__((used, aligned(32)));
+DMAMEM static uint32_t bitdata[BYTES_PER_DMA * 64] __attribute__((used, aligned(32)));
 volatile uint32_t framebuffer_index = 0;
 volatile bool dma_first;
 
@@ -67,11 +67,11 @@ OctoWS2811::OctoWS2811(uint32_t numPerStrip, void *frameBuf, void *drawBuf, uint
 	frameBuffer = frameBuf;
 	drawBuffer = drawBuf;
 	params = config;
-	if (numPins > NUM_DIGITAL_PINS) numPins = NUM_DIGITAL_PINS;
+	if (numPins > NUM_DIGITAL_PINS)
+		numPins = NUM_DIGITAL_PINS;
 	numpins = numPins;
 	memcpy(pinlist, pinList, numpins);
 }
-
 
 void OctoWS2811::begin(uint32_t numPerStrip, void *frameBuf, void *drawBuf, uint8_t config, uint8_t numPins, const uint8_t *pinList)
 {
@@ -79,7 +79,8 @@ void OctoWS2811::begin(uint32_t numPerStrip, void *frameBuf, void *drawBuf, uint
 	frameBuffer = frameBuf;
 	drawBuffer = drawBuf;
 	params = config;
-	if (numPins > NUM_DIGITAL_PINS) numPins = NUM_DIGITAL_PINS;
+	if (numPins > NUM_DIGITAL_PINS)
+		numPins = NUM_DIGITAL_PINS;
 	numpins = numPins;
 	memcpy(pinlist, pinList, numpins);
 	begin();
@@ -91,7 +92,8 @@ int OctoWS2811::numPixels(void)
 }
 
 extern "C" void xbar_connect(unsigned int input, unsigned int output); // in pwm.c
-static volatile uint32_t *standard_gpio_addr(volatile uint32_t *fastgpio) {
+static volatile uint32_t *standard_gpio_addr(volatile uint32_t *fastgpio)
+{
 	return (volatile uint32_t *)((uint32_t)fastgpio - 0x01E48000);
 }
 
@@ -101,12 +103,15 @@ void OctoWS2811::begin(void)
 
 	// configure which pins to use
 	memset(bitmask, 0, sizeof(bitmask));
-	for (uint32_t i=0; i < numpins; i++) {
+	for (uint32_t i = 0; i < numpins; i++)
+	{
 		uint8_t pin = pinlist[i];
-		if (pin >= NUM_DIGITAL_PINS) continue; // ignore illegal pins
+		if (pin >= NUM_DIGITAL_PINS)
+			continue; // ignore illegal pins
 		uint8_t bit = digitalPinToBit(pin);
 		uint8_t offset = ((uint32_t)portOutputRegister(pin) - (uint32_t)&GPIO6_DR) >> 14;
-		if (offset > 3) continue; // ignore unknown pins
+		if (offset > 3)
+			continue; // ignore unknown pins
 		pin_bitnum[i] = bit;
 		pin_offset[i] = offset;
 		uint32_t mask = 1 << bit;
@@ -120,7 +125,8 @@ void OctoWS2811::begin(void)
 	comp1load[0] = (uint16_t)((float)F_BUS_ACTUAL * (float)TH_TL);
 	comp1load[1] = (uint16_t)((float)F_BUS_ACTUAL * (float)T0H);
 	comp1load[2] = (uint16_t)((float)F_BUS_ACTUAL * (float)T1H);
-	if ((params & 0xF0) == WS2811_400kHz) {
+	if ((params & 0xF0) == WS2811_400kHz)
+	{
 		comp1load[0] *= 2;
 		comp1load[1] *= 2;
 		comp1load[2] *= 2;
@@ -152,7 +158,7 @@ void OctoWS2811::begin(void)
 	xbar_connect(XBARA1_IN_QTIMER4_TIMER1, XBARA1_OUT_DMA_CH_MUX_REQ31);
 	xbar_connect(XBARA1_IN_QTIMER4_TIMER2, XBARA1_OUT_DMA_CH_MUX_REQ94);
 	XBARA1_CTRL0 = XBARA_CTRL_STS1 | XBARA_CTRL_EDGE1(3) | XBARA_CTRL_DEN1 |
-		XBARA_CTRL_STS0 | XBARA_CTRL_EDGE0(3) | XBARA_CTRL_DEN0;
+				   XBARA_CTRL_STS0 | XBARA_CTRL_EDGE0(3) | XBARA_CTRL_DEN0;
 	XBARA1_CTRL1 = XBARA_CTRL_STS0 | XBARA_CTRL_EDGE0(3) | XBARA_CTRL_DEN0;
 
 	// configure DMA channels
@@ -161,8 +167,8 @@ void OctoWS2811::begin(void)
 	dma1.TCD->SOFF = 8;
 	dma1.TCD->ATTR = DMA_TCD_ATTR_SSIZE(3) | DMA_TCD_ATTR_SMOD(4) | DMA_TCD_ATTR_DSIZE(2);
 	dma1.TCD->NBYTES_MLOFFYES = DMA_TCD_NBYTES_DMLOE |
-		DMA_TCD_NBYTES_MLOFFYES_MLOFF(-65536) |
-		DMA_TCD_NBYTES_MLOFFYES_NBYTES(16);
+								DMA_TCD_NBYTES_MLOFFYES_MLOFF(-65536) |
+								DMA_TCD_NBYTES_MLOFFYES_NBYTES(16);
 	dma1.TCD->SLAST = 0;
 	dma1.TCD->DADDR = &GPIO1_DR_SET;
 	dma1.TCD->DOFF = 16384;
@@ -176,8 +182,8 @@ void OctoWS2811::begin(void)
 	dma2next.TCD->SOFF = 8;
 	dma2next.TCD->ATTR = DMA_TCD_ATTR_SSIZE(3) | DMA_TCD_ATTR_DSIZE(2);
 	dma2next.TCD->NBYTES_MLOFFYES = DMA_TCD_NBYTES_DMLOE |
-		DMA_TCD_NBYTES_MLOFFYES_MLOFF(-65536) |
-		DMA_TCD_NBYTES_MLOFFYES_NBYTES(16);
+									DMA_TCD_NBYTES_MLOFFYES_MLOFF(-65536) |
+									DMA_TCD_NBYTES_MLOFFYES_NBYTES(16);
 	dma2next.TCD->SLAST = 0;
 	dma2next.TCD->DADDR = &GPIO1_DR_CLEAR;
 	dma2next.TCD->DOFF = 16384;
@@ -196,8 +202,8 @@ void OctoWS2811::begin(void)
 	dma3.TCD->SOFF = 8;
 	dma3.TCD->ATTR = DMA_TCD_ATTR_SSIZE(3) | DMA_TCD_ATTR_SMOD(4) | DMA_TCD_ATTR_DSIZE(2);
 	dma3.TCD->NBYTES_MLOFFYES = DMA_TCD_NBYTES_DMLOE |
-		DMA_TCD_NBYTES_MLOFFYES_MLOFF(-65536) |
-		DMA_TCD_NBYTES_MLOFFYES_NBYTES(16);
+								DMA_TCD_NBYTES_MLOFFYES_MLOFF(-65536) |
+								DMA_TCD_NBYTES_MLOFFYES_NBYTES(16);
 	dma3.TCD->SLAST = 0;
 	dma3.TCD->DADDR = &GPIO1_DR_CLEAR;
 	dma3.TCD->DOFF = 16384;
@@ -210,32 +216,44 @@ void OctoWS2811::begin(void)
 	// set up the buffers
 	uint32_t bufsize = numbytes * numpins;
 	memset(frameBuffer, 0, bufsize);
-	if (drawBuffer) {
+	if (drawBuffer)
+	{
 		memset(drawBuffer, 0, bufsize);
-	} else {
+	}
+	else
+	{
 		drawBuffer = frameBuffer;
 	}
 }
 
 static void fillbits(uint32_t *dest, const uint8_t *pixels, int n, uint32_t mask)
 {
-	do {
-		uint8_t pix = *pixels++; 
-		if (!(pix & 0x80)) *dest |= mask;
+	do
+	{
+		uint8_t pix = *pixels++;
+		if (!(pix & 0x80))
+			*dest |= mask;
 		dest += 4;
-		if (!(pix & 0x40)) *dest |= mask;
+		if (!(pix & 0x40))
+			*dest |= mask;
 		dest += 4;
-		if (!(pix & 0x20)) *dest |= mask;
+		if (!(pix & 0x20))
+			*dest |= mask;
 		dest += 4;
-		if (!(pix & 0x10)) *dest |= mask;
+		if (!(pix & 0x10))
+			*dest |= mask;
 		dest += 4;
-		if (!(pix & 0x08)) *dest |= mask;
+		if (!(pix & 0x08))
+			*dest |= mask;
 		dest += 4;
-		if (!(pix & 0x04)) *dest |= mask;
+		if (!(pix & 0x04))
+			*dest |= mask;
 		dest += 4;
-		if (!(pix & 0x02)) *dest |= mask;
+		if (!(pix & 0x02))
+			*dest |= mask;
 		dest += 4;
-		if (!(pix & 0x01)) *dest |= mask;
+		if (!(pix & 0x01))
+			*dest |= mask;
 		dest += 4;
 	} while (--n > 0);
 }
@@ -243,11 +261,13 @@ static void fillbits(uint32_t *dest, const uint8_t *pixels, int n, uint32_t mask
 void OctoWS2811::show(void)
 {
 	// wait for any prior DMA operation
-	while (!dma3.complete()) ; // wait
+	while (!dma3.complete())
+		; // wait
 
 	// it's ok to copy the drawing buffer to the frame buffer
 	// during the 50us WS2811 reset time
-	if (drawBuffer != frameBuffer) {
+	if (drawBuffer != frameBuffer)
+	{
 		memcpy(frameBuffer, drawBuffer, numbytes * numpins);
 	}
 
@@ -268,36 +288,44 @@ void OctoWS2811::show(void)
 	//digitalWriteFast(12, HIGH);
 	memset(bitdata, 0, sizeof(bitdata));
 	uint32_t count = numbytes;
-	if (count > BYTES_PER_DMA*2) count = BYTES_PER_DMA*2;
+	if (count > BYTES_PER_DMA * 2)
+		count = BYTES_PER_DMA * 2;
 	framebuffer_index = count;
-	for (uint32_t i=0; i < numpins; i++) {
-		fillbits(bitdata + pin_offset[i], (uint8_t *)frameBuffer + i*numbytes,
-			count, 1<<pin_bitnum[i]);
+	for (uint32_t i = 0; i < numpins; i++)
+	{
+		fillbits(bitdata + pin_offset[i], (uint8_t *)frameBuffer + i * numbytes,
+				 count, 1 << pin_bitnum[i]);
 	}
 	arm_dcache_flush_delete(bitdata, count * 128);
 	//digitalWriteFast(12, LOW);
 
-        // set up DMA transfers
-        if (numbytes <= BYTES_PER_DMA*2) {
+	// set up DMA transfers
+	if (numbytes <= BYTES_PER_DMA * 2)
+	{
 		dma2.TCD->SADDR = bitdata;
 		dma2.TCD->DADDR = &GPIO1_DR_CLEAR;
 		dma2.TCD->CITER_ELINKNO = count * 8;
 		dma2.TCD->CSR = DMA_TCD_CSR_DREQ;
-        } else {
+	}
+	else
+	{
 		dma2.TCD->SADDR = bitdata;
 		dma2.TCD->DADDR = &GPIO1_DR_CLEAR;
 		dma2.TCD->CITER_ELINKNO = BYTES_PER_DMA * 8;
 		dma2.TCD->CSR = 0;
 		dma2.TCD->CSR = DMA_TCD_CSR_INTMAJOR | DMA_TCD_CSR_ESG;
-		dma2next.TCD->SADDR = bitdata + BYTES_PER_DMA*32;
+		dma2next.TCD->SADDR = bitdata + BYTES_PER_DMA * 32;
 		dma2next.TCD->CITER_ELINKNO = BYTES_PER_DMA * 8;
-		if (numbytes <= BYTES_PER_DMA*3) {
+		if (numbytes <= BYTES_PER_DMA * 3)
+		{
 			dma2next.TCD->CSR = DMA_TCD_CSR_ESG;
-		} else {
+		}
+		else
+		{
 			dma2next.TCD->CSR = DMA_TCD_CSR_ESG | DMA_TCD_CSR_INTMAJOR;
 		}
 		dma_first = true;
-        }
+	}
 	dma3.clearComplete();
 	dma1.enable();
 	dma2.enable();
@@ -309,7 +337,8 @@ void OctoWS2811::show(void)
 	TMR4_CNTR2 = comp1load[0] + 1;
 
 	// wait for WS2812 reset
-	while (micros() - update_begin_micros < numbytes * 10 + 300) ;
+	while (micros() - update_begin_micros < numbytes * 10 + 300)
+		;
 
 	// start everything running!
 	TMR4_ENBL = enable | 7;
@@ -324,21 +353,26 @@ void OctoWS2811::isr(void)
 	// fill (up to) half the transmit buffer with new data
 	//digitalWriteFast(12, HIGH);
 	uint32_t *dest;
-	if (dma_first) {
+	if (dma_first)
+	{
 		dma_first = false;
 		dest = bitdata;
-	} else {
-		dma_first = true;
-		dest = bitdata + BYTES_PER_DMA*32;
 	}
-	memset(dest, 0, sizeof(bitdata)/2);
+	else
+	{
+		dma_first = true;
+		dest = bitdata + BYTES_PER_DMA * 32;
+	}
+	memset(dest, 0, sizeof(bitdata) / 2);
 	uint32_t index = framebuffer_index;
 	uint32_t count = numbytes - framebuffer_index;
-	if (count > BYTES_PER_DMA) count = BYTES_PER_DMA;
+	if (count > BYTES_PER_DMA)
+		count = BYTES_PER_DMA;
 	framebuffer_index = index + count;
-	for (int i=0; i < numpins; i++) {
-		fillbits(dest + pin_offset[i], (uint8_t *)frameBuffer + index + i*numbytes,
-			count, 1<<pin_bitnum[i]);
+	for (int i = 0; i < numpins; i++)
+	{
+		fillbits(dest + pin_offset[i], (uint8_t *)frameBuffer + index + i * numbytes,
+				 count, 1 << pin_bitnum[i]);
 	}
 	arm_dcache_flush_delete(dest, count * 128);
 	//digitalWriteFast(12, LOW);
@@ -347,19 +381,26 @@ void OctoWS2811::isr(void)
 	dma2next.TCD->SADDR = dest;
 	dma2next.TCD->CITER_ELINKNO = count * 8;
 	uint32_t remain = numbytes - (index + count);
-	if (remain == 0) {
+	if (remain == 0)
+	{
 		dma2next.TCD->CSR = DMA_TCD_CSR_DREQ;
-	} else if (remain <= BYTES_PER_DMA) {
+	}
+	else if (remain <= BYTES_PER_DMA)
+	{
 		dma2next.TCD->CSR = DMA_TCD_CSR_ESG;
-	} else {
+	}
+	else
+	{
 		dma2next.TCD->CSR = DMA_TCD_CSR_ESG | DMA_TCD_CSR_INTMAJOR;
 	}
 }
 
 int OctoWS2811::busy(void)
 {
-	if (!dma3.complete()) ; // DMA still running
-	if (micros() - update_begin_micros < numbytes * 10 + 300) return 1; // WS2812 reset
+	if (!dma3.complete())
+		; // DMA still running
+	if (micros() - update_begin_micros < numbytes * 10 + 300)
+		return 1; // WS2812 reset
 	return 0;
 }
 
@@ -370,23 +411,24 @@ int OctoWS2811::busy(void)
 
 void OctoWS2811::setPixel(uint32_t num, int color)
 {
-	switch (params & 7) {
-	  case WS2811_RBG:
-		color = (color&0xFF0000) | ((color<<8)&0x00FF00) | ((color>>8)&0x0000FF);
+	switch (params & 7)
+	{
+	case WS2811_RBG:
+		color = (color & 0xFF0000) | ((color << 8) & 0x00FF00) | ((color >> 8) & 0x0000FF);
 		break;
-	  case WS2811_GRB:
-		color = ((color<<8)&0xFF0000) | ((color>>8)&0x00FF00) | (color&0x0000FF);
+	case WS2811_GRB:
+		color = ((color << 8) & 0xFF0000) | ((color >> 8) & 0x00FF00) | (color & 0x0000FF);
 		break;
-	  case WS2811_GBR:
-		color = ((color<<16)&0xFF0000) | ((color>>8)&0x00FFFF);
+	case WS2811_GBR:
+		color = ((color << 16) & 0xFF0000) | ((color >> 8) & 0x00FFFF);
 		break;
-	  case WS2811_BRG:
-		color = ((color<<8)&0xFFFF00) | ((color>>16)&0x0000FF);
+	case WS2811_BRG:
+		color = ((color << 8) & 0xFFFF00) | ((color >> 16) & 0x0000FF);
 		break;
-	  case WS2811_BGR:
-		color = ((color<<16)&0xFF0000) | (color&0x00FF00) | ((color>>16)&0x0000FF);
+	case WS2811_BGR:
+		color = ((color << 16) & 0xFF0000) | (color & 0x00FF00) | ((color >> 16) & 0x0000FF);
 		break;
-	  default:
+	default:
 		break;
 	}
 	uint8_t *dest = (uint8_t *)drawBuffer + num * 3;
@@ -399,23 +441,24 @@ int OctoWS2811::getPixel(uint32_t num)
 {
 	const uint8_t *p = (uint8_t *)drawBuffer + num * 3;
 	int color = p[2] | (p[1] << 8) | (p[0] << 16);
-	switch (params & 7) {
-	  case WS2811_RBG:
-		color = (color&0xFF0000) | ((color<<8)&0x00FF00) | ((color>>8)&0x0000FF);
+	switch (params & 7)
+	{
+	case WS2811_RBG:
+		color = (color & 0xFF0000) | ((color << 8) & 0x00FF00) | ((color >> 8) & 0x0000FF);
 		break;
-	  case WS2811_GRB:
-		color = ((color<<8)&0xFF0000) | ((color>>8)&0x00FF00) | (color&0x0000FF);
+	case WS2811_GRB:
+		color = ((color << 8) & 0xFF0000) | ((color >> 8) & 0x00FF00) | (color & 0x0000FF);
 		break;
-	  case WS2811_GBR:
-		color = ((color<<8)&0xFFFF00) | ((color>>16)&0x0000FF);
+	case WS2811_GBR:
+		color = ((color << 8) & 0xFFFF00) | ((color >> 16) & 0x0000FF);
 		break;
-	  case WS2811_BRG:
-		color = ((color<<16)&0xFF0000) | ((color>>8)&0x00FFFF);
+	case WS2811_BRG:
+		color = ((color << 16) & 0xFF0000) | ((color >> 8) & 0x00FFFF);
 		break;
-	  case WS2811_BGR:
-		color = ((color<<16)&0xFF0000) | (color&0x00FF00) | ((color>>16)&0x0000FF);
+	case WS2811_BGR:
+		color = ((color << 16) & 0xFF0000) | (color & 0x00FF00) | ((color >> 16) & 0x0000FF);
 		break;
-	  default:
+	default:
 		break;
 	}
 	return color;

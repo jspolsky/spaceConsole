@@ -10,28 +10,14 @@ template <EOrder RGB_ORDER = RGB,
 class CTeensy4Controller : public CPixelLEDController<RGB_ORDER, 8, 0xFF>
 {
     OctoWS2811 *pocto;
-    uint8_t *drawingMemory;
 
 public:
-    CTeensy4Controller(OctoWS2811 *_pocto, int *_drawingMemory)
-        : pocto(_pocto),
-          drawingMemory((uint8_t *)_drawingMemory){
-
-          };
+    CTeensy4Controller(OctoWS2811 *_pocto)
+        : pocto(_pocto){};
 
     virtual void init() {}
     virtual void showPixels(PixelController<RGB_ORDER, 8, 0xFF> &pixels)
     {
-
-        // uint8_t *p = drawingMemory;
-        // while (pixels.has(1))
-        // {
-        //     *p++ = pixels.loadAndScale0();
-        //     *p++ = pixels.loadAndScale1();
-        //     *p++ = pixels.loadAndScale2();
-        //     pixels.stepDithering();
-        //     pixels.advanceData();
-        // }
 
         uint32_t i = 0;
         while (pixels.has(1))

@@ -9,27 +9,34 @@
 
 char *itoa(int value, char *str, int base);
 
+int fps;
+
 void setup()
 {
 
   Util::setup();
   Led::setup();
-  Encoder::setup();
+  //  Encoder::setup();
   OLED::setup();
   OLED::status(0, "Space Console 1.0");
+
+  fps = 0;
 }
 
 void loop()
 {
-  uint32_t absolute;
-  Encoder::loop(absolute);
-  Led::loop(absolute);
 
   char s[16];
-  itoa(absolute, s, 10);
-  EVERY_N_MILLISECONDS(500)
+
+  //  uint32_t absolute;
+  //  Encoder::loop(absolute);
+  Led::loop();
+  fps++;
+
+  EVERY_N_MILLISECONDS(1000)
   {
-    // updating the oled is super slow
+    itoa(fps, s, 10);
     OLED::status(1, s);
+    fps = 0;
   }
 }

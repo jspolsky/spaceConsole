@@ -16,7 +16,7 @@ void setup()
 
   Util::setup();
   Led::setup();
-  //  Encoder::setup();
+  Encoder::setup();
   OLED::setup();
   OLED::status(0, "Space Console 1.0");
 
@@ -28,8 +28,12 @@ void loop()
 
   char s[16];
 
-  //  uint32_t absolute;
-  //  Encoder::loop(absolute);
+  uint32_t absolute;
+
+  Encoder::loop(absolute);
+  uint8_t brightness = (absolute / 4);
+  //Led::setBrightness(brightness);
+
   Led::loop();
   fps++;
 
@@ -38,5 +42,6 @@ void loop()
     itoa(fps, s, 10);
     OLED::status(1, s);
     fps = 0;
+    Serial.println(absolute);
   }
 }

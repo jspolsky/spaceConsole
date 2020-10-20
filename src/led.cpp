@@ -53,6 +53,9 @@ namespace Led
     CRGB color = rgColors[ixColor];
     uint32_t height = (t % 1200);
 
+    if (height > 1190)
+      height = 1199;
+
     for (uint32_t i = 0; i < height; i++)
     {
       rgbarray[i] = color;
@@ -60,18 +63,23 @@ namespace Led
       rgbarray[i + 2400] = color;
       rgbarray[i + 3600] = color;
     }
-    for (uint32_t i = height; i < 1200; i++)
-    {
-      rgbarray[i] = CRGB::Black;
-      rgbarray[i + 1200] = CRGB::Black;
-      rgbarray[i + 2400] = CRGB::Black;
-      rgbarray[i + 3600] = CRGB::Black;
-    }
+    // for (uint32_t i = height; i < 1200; i++)
+    // {
+    //   rgbarray[i] = CRGB::White;
+    //   rgbarray[i + 1200] = CRGB::White;
+    //   rgbarray[i + 2400] = CRGB::White;
+    //   rgbarray[i + 3600] = CRGB::White;
+    // }
 
     rgbarray[4800] = color;                       // 4800 is the first button ... for now
     rgbarray[4801] = rgColors[(ixColor + 1) % 8]; // 4801 is the next button ... preview the upcoming color :)
 
     FastLED.show();
+  }
+
+  void setBrightness(uint8_t brightness)
+  {
+    FastLED.setBrightness(brightness);
   }
 
 }; // namespace Led

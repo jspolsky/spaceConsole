@@ -82,4 +82,9 @@ namespace Led
     FastLED.setBrightness(brightness);
   }
 
+  uint16_t getFPS()
+  {
+    return FastLED.getFPS();
+  }
+
 }; // namespace Led

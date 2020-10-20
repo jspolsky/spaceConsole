@@ -9,8 +9,6 @@
 
 char *itoa(int value, char *str, int base);
 
-int fps;
-
 void setup()
 {
 
@@ -18,9 +16,7 @@ void setup()
   Led::setup();
   Encoder::setup();
   OLED::setup();
-  OLED::status(0, "Space Console 1.0");
-
-  fps = 0;
+  OLED::status(0, "Space Console 2.0");
 }
 
 void loop()
@@ -35,13 +31,12 @@ void loop()
   //Led::setBrightness(brightness);
 
   Led::loop();
-  fps++;
 
   EVERY_N_MILLISECONDS(1000)
   {
-    itoa(fps, s, 10);
+    itoa(Led::getFPS(), s, 10);
     OLED::status(1, s);
-    fps = 0;
+    //fps = 0;
     Serial.println(absolute);
   }
 }

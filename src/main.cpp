@@ -36,7 +36,6 @@ void loop()
   {
     itoa(Led::getFPS(), s, 10);
     OLED::status(1, s);
-    //fps = 0;
-    Serial.println(absolute);
+    //    Serial.println(absolute);
   }
 }

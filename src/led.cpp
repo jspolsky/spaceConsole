@@ -6,20 +6,12 @@
 #include "Teensy4Controller.h"
 #include "Util.h"
 #include "led.h"
+#include "palettes.h"
 
 namespace Led
 {
 
-#define RED 0xFF0000
-#define GREEN 0x00FF00
-#define BLUE 0x0000FF
-#define YELLOW 0xFFFF00
-#define PINK 0xFF1088
-#define ORANGE 0xE05800
-#define WHITE 0xFFFFFF
-#define BROWN 0x654321
-
-  CRGB rgColors[8] = {CRGB::White, CRGB::Red, CRGB::Green, CRGB::Blue, CRGB::Yellow, CRGB::Pink, CRGB::Orange, CRGB::Brown};
+  const CRGB *rgColors = rgPalettes[0];
 
   const int numPins = 17;
   byte pinList[numPins] = {25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 14};
@@ -41,7 +33,9 @@ namespace Led
     octo.begin();
     pcontroller = new CTeensy4Controller<RGB, WS2811_800kHz>(&octo);
 
-    FastLED.setBrightness(255);
+    FastLED.setBrightness(128);
+    FastLED.setCorrection(TypicalLEDStrip);
+    FastLED.setTemperature(DirectSunlight);
     FastLED.addLeds(pcontroller, rgbarray, numPins * ledsPerStrip);
   }
 
@@ -49,7 +43,7 @@ namespace Led
   {
 
     uint32_t t = millis();
-    uint8_t ixColor = ((t / 1200) % 8);
+    uint8_t ixColor = ((t / 1200) % 512);
     CRGB color = rgColors[ixColor];
     uint32_t height = (t % 1200);
 
@@ -71,8 +65,8 @@ namespace Led
     //   rgbarray[i + 3600] = CRGB::White;
     // }
 
-    rgbarray[4800] = color;                       // 4800 is the first button ... for now
-    rgbarray[4801] = rgColors[(ixColor + 1) % 8]; // 4801 is the next button ... preview the upcoming color :)
+    rgbarray[4800] = color;                         // 4800 is the first button ... for now
+    rgbarray[4801] = rgColors[(ixColor + 1) % 512]; // 4801 is the next button ... preview the upcoming color :)
 
     FastLED.show();
   }

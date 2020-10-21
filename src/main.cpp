@@ -38,4 +38,9 @@ void loop()
     OLED::status(1, s);
     //    Serial.println(absolute);
   }
+
+  EVERY_N_SECONDS(5)
+  {
+    Led::nextPattern();
+  }
 }

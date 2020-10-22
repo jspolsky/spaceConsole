@@ -6,17 +6,35 @@
 #include "Teensy4Controller.h"
 #include "Util.h"
 #include "led.h"
-#include "palettes.h"
 
 namespace Led
 {
 
-  const CRGB *rgColors;
+  //
+  // Which of the physical LEDs that are present are going to
+  // get patterns drawn on them?
+  //
+
+  const uint32_t FIRST_LED = 0;  // LAB
+  const uint32_t NUM_LEDS = 300; // LAB
+
+  // const uint32_t FIRST_LED = 400;  // ANTENNA
+  // const uint32_t NUM_LEDS = 800;   // ANTENNA
+
+  //
+  // Physical arrangement of LEDs
+  //
+
+  // Pins 25-40 go out to the antenna. Each group of four sequential pins
+  // represent one line from the bottom to the top, so, for example, pins 25 - 28
+  // are a single line of 1200 LEDs, addressed as pixels[0..1199].
+  //
+  // Pin 14 is for RGB pushbuttons on the control panel.
 
   const int numPins = 17;
   byte pinList[numPins] = {25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 14};
   const int ledsPerStrip = 300;
-  CRGB rgbarray[numPins * ledsPerStrip];
+  CRGB pixels[numPins * ledsPerStrip];
 
   // These buffers need to be large enough for all the pixels.
   // The total number of pixels is "ledsPerStrip * numPins".
@@ -30,22 +48,20 @@ namespace Led
 
   void setup()
   {
-    nextPattern();
-
     octo.begin();
     pcontroller = new CTeensy4Controller<RGB, WS2811_800kHz>(&octo);
 
-    FastLED.setBrightness(128);
+    FastLED.setBrightness(255);
     //FastLED.setCorrection(TypicalLEDStrip);
     //FastLED.setTemperature(DirectSunlight);
-    FastLED.addLeds(pcontroller, rgbarray, numPins * ledsPerStrip);
+    FastLED.addLeds(pcontroller, pixels, numPins * ledsPerStrip);
   }
 
   void loop()
   {
-    //fnOneSecondSweep();
+    fnOneSecondSweep();
     //fnMondrian();
-    fnPaletteTester();
+    //fnPaletteTester();
     FastLED.show();
   }
 
@@ -59,20 +75,12 @@ namespace Led
     return FastLED.getFPS();
   }
 
-  void nextPattern()
-  {
-    uint8_t ixPalette = random8() % NUM_PALETTES;
-    rgColors = rgPalettes[ixPalette];
-
-    dbgprintf("New palette %d\n", ixPalette);
-  }
-
   void All4Strips(uint32_t i, CRGB color)
   {
-    rgbarray[i] =
-        rgbarray[i + 1200] =
-            rgbarray[i + 2400] =
-                rgbarray[i + 3600] = color;
+    pixels[i + FIRST_LED] =
+        pixels[i + FIRST_LED + 1200] =
+            pixels[i + FIRST_LED + 2400] =
+                pixels[i + FIRST_LED + 3600] = color;
   }
 
   //
@@ -82,21 +90,32 @@ namespace Led
 
   void fnOneSecondSweep()
   {
-    uint32_t t = millis();
-    uint8_t ixColor = ((t / 1200) % 4);
-    CRGB color = rgColors[ixColor];
-    uint32_t height = (t % 1200);
 
-    if (height > 1190)
-      height = 1199;
+    static uint32_t split = 0;
+    static uint32_t last_split = 0;
+    static uint8_t hue = random8();
 
-    for (uint32_t i = 0; i < height; i++)
+    last_split = split;
+    split = (millis() % 1000) * NUM_LEDS / 1000;
+
+    if (last_split > split)
     {
-      All4Strips(i, color);
+      // finish the top
+      for (uint32_t i = last_split; i < NUM_LEDS; i++)
+      {
+        All4Strips(i, CHSV(hue, 255, 128));
+      }
+
+      hue += random(27, 102);
     }
 
-    rgbarray[4800] = color;                       // 4800 is the first button ... for now
-    rgbarray[4801] = rgColors[(ixColor + 1) % 4]; // 4801 is the next button ... preview the upcoming color :)
+    for (uint32_t i = 0; i < split; i++)
+    {
+      All4Strips(i, CHSV(hue, 255, 128));
+    }
+
+    pixels[4800] =
+        pixels[4801] = CHSV(hue, 255, 128); // 4800 is the first button ... for now
   }
 
   void fnMondrian()
@@ -110,7 +129,7 @@ namespace Led
     {
       if (i >= startingPosition && i < (startingPosition + length))
       {
-        All4Strips(i, rgColors[ixColorFromPalette]);
+        All4Strips(i, CHSV(hue, 255, 128));
       }
       else
       {
@@ -132,23 +151,23 @@ namespace Led
     static uint8_t baseHue = 0;
     static uint32_t chaser = 0;
 
-    for (uint32_t i = 900; i < 1200; i++)
+    for (uint32_t i = 0; i < 300; i++)
       All4Strips(i, CRGB(0x444444));
 
-    for (uint32_t i = 900; i < 960; i++)
+    for (uint32_t i = 0; i < 60; i++)
       All4Strips(i, CHSV(baseHue, 255, 64)); // orig
-    for (uint32_t i = 960; i < 1020; i++)
+    for (uint32_t i = 60; i < 120; i++)
       All4Strips(i, CHSV(baseHue, 255, 128)); // brighter
-    for (uint32_t i = 1020; i < 1080; i++)
+    for (uint32_t i = 120; i < 180; i++)
       All4Strips(i, CHSV(baseHue, 255, 192)); // brighter!
-    for (uint32_t i = 1080; i < 1140; i++)
+    for (uint32_t i = 180; i < 240; i++)
       All4Strips(i, CHSV(baseHue, 192, 212)); // desaturate
-    for (uint32_t i = 1140; i < 1200; i++)
+    for (uint32_t i = 240; i < 300; i++)
       All4Strips(i, CHSV(baseHue + 128, 255, 64)); // opposite
 
-    All4Strips(chaser + 900, CRGB(0x444444));
-    All4Strips(chaser + 901, CRGB(0x444444));
-    All4Strips(chaser + 902, CRGB(0x444444));
+    All4Strips(chaser, CRGB(0x444444));
+    All4Strips(chaser, CRGB(0x444444));
+    All4Strips(chaser, CRGB(0x444444));
 
     EVERY_N_MILLISECONDS(10)
     {

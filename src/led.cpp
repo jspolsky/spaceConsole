@@ -59,9 +59,8 @@ namespace Led
 
   void loop()
   {
-    fnOneSecondSweep();
-    //fnMondrian();
-    //fnPaletteTester();
+    //fnOneSecondSweep();
+    fnMondrian();
     FastLED.show();
   }
 
@@ -88,6 +87,7 @@ namespace Led
   // pattern / style / gene.
   //
 
+  // zap a nice color from bottom to top every second.
   void fnOneSecondSweep()
   {
 
@@ -118,63 +118,24 @@ namespace Led
         pixels[4801] = CHSV(hue, 255, 128); // 4800 is the first button ... for now
   }
 
+  // show little pulses of nice colors
   void fnMondrian()
   {
-    static uint8_t ixColorFromPalette = 0; // current color, 0..3
-    static uint32_t length = random(10, 100);
-    static uint32_t startingPosition = random(900, 1200 - length);
-    static uint8_t hue = random(0, 255);
-
-    for (uint32_t i = 900; i < 1200; i++)
+    EVERY_N_MILLIS(200)
     {
-      if (i >= startingPosition && i < (startingPosition + length))
-      {
-        All4Strips(i, CHSV(hue, 255, 128));
-      }
-      else
+      for (uint32_t i = 0; i < NUM_LEDS; i++)
       {
         All4Strips(i, CRGB::Black);
       }
-    }
 
-    EVERY_N_MILLISECONDS(100)
-    {
-      ixColorFromPalette = (ixColorFromPalette + 1) % 4;
-      length = random(10, 100);
-      startingPosition = random(900, 1200 - length);
-      hue = random(0, 255);
-    }
-  }
+      uint16_t runlength = random16(NUM_LEDS / 10, NUM_LEDS / 5);
+      uint16_t start = random16(0, NUM_LEDS - 1 - runlength);
+      CRGB color = CHSV(random8(), 255, 128);
 
-  void fnPaletteTester()
-  {
-    static uint8_t baseHue = 0;
-    static uint32_t chaser = 0;
-
-    for (uint32_t i = 0; i < 300; i++)
-      All4Strips(i, CRGB(0x444444));
-
-    for (uint32_t i = 0; i < 60; i++)
-      All4Strips(i, CHSV(baseHue, 255, 64)); // orig
-    for (uint32_t i = 60; i < 120; i++)
-      All4Strips(i, CHSV(baseHue, 255, 128)); // brighter
-    for (uint32_t i = 120; i < 180; i++)
-      All4Strips(i, CHSV(baseHue, 255, 192)); // brighter!
-    for (uint32_t i = 180; i < 240; i++)
-      All4Strips(i, CHSV(baseHue, 192, 212)); // desaturate
-    for (uint32_t i = 240; i < 300; i++)
-      All4Strips(i, CHSV(baseHue + 128, 255, 64)); // opposite
-
-    All4Strips(chaser, CRGB(0x444444));
-    All4Strips(chaser, CRGB(0x444444));
-    All4Strips(chaser, CRGB(0x444444));
-
-    EVERY_N_MILLISECONDS(10)
-    {
-      baseHue++;
-      chaser = chaser + 1;
-      if (chaser > 297)
-        chaser = 0;
+      for (uint32_t i = start; i < start + runlength; i++)
+      {
+        All4Strips(i, color);
+      }
     }
   }
 

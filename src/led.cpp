@@ -123,10 +123,11 @@ namespace Led
   {
     EVERY_N_MILLIS(200)
     {
-      for (uint32_t i = 0; i < NUM_LEDS; i++)
-      {
-        All4Strips(i, CRGB::Black);
-      }
+
+      // so
+      // the last param of fadeToBlackBy can be 255 for "crisp" mondrian
+      // or any power of 2 below that, to get different effects.
+      fadeToBlackBy(pixels, 16 * ledsPerStrip, 32);
 
       uint16_t runlength = random16(NUM_LEDS / 10, NUM_LEDS / 5);
       uint16_t start = random16(0, NUM_LEDS - 1 - runlength);

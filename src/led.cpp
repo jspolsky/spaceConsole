@@ -121,22 +121,33 @@ namespace Led
   // show little pulses of nice colors
   void fnMondrian()
   {
+    static uint8_t hue = 0;
+
+    // 200, 500, 2500, 5000 are interesting options
+    EVERY_N_MILLIS(200)
+    {
+      hue = random8();
+    }
+
     EVERY_N_MILLIS(200)
     {
 
-      // so
-      // the last param of fadeToBlackBy can be 255 for "crisp" mondrian
-      // or any power of 2 below that, to get different effects.
-      fadeToBlackBy(pixels, 16 * ledsPerStrip, 32);
-
       uint16_t runlength = random16(NUM_LEDS / 10, NUM_LEDS / 5);
       uint16_t start = random16(0, NUM_LEDS - 1 - runlength);
-      CRGB color = CHSV(random8(), 255, 128);
 
+      CRGB color = CHSV(hue, 255, 192);
       for (uint32_t i = start; i < start + runlength; i++)
       {
         All4Strips(i, color);
       }
+    }
+
+    EVERY_N_MILLIS(10)
+    {
+      // so
+      // the last param of fadeToBlackBy can be 255 for "crisp" mondrian
+      // or any power of 2 below that, to get different effects.
+      fadeToBlackBy(pixels, 16 * ledsPerStrip, 4);
     }
   }
 

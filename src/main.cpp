@@ -6,6 +6,7 @@
 #include "led.h"
 #include "encoder.h"
 #include "oled.h"
+#include "alnum.h"
 
 char *itoa(int value, char *str, int base);
 
@@ -17,6 +18,8 @@ void setup()
   Encoder::setup();
   OLED::setup();
   OLED::status(0, "Space Console 2.0");
+  Alnum::setup();
+  Alnum::writeString("SPACE TURTLES");
 }
 
 void loop()
@@ -38,4 +41,6 @@ void loop()
     OLED::status(1, s);
     //    Serial.println(absolute);
   }
+
+  Alnum::loop();
 }

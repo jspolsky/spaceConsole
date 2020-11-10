@@ -10,6 +10,8 @@
 namespace Led
 {
 
+  static bool power = true;
+
   //
   // Which of the physical LEDs that are present are going to
   // get patterns drawn on them?
@@ -59,9 +61,15 @@ namespace Led
 
   void loop()
   {
-    //fnOneSecondSweep();
-    fnMondrian();
-    FastLED.show();
+    if (power)
+    {
+      fnMondrian();
+      FastLED.show();
+    }
+    else
+    {
+      FastLED.showColor(0);
+    }
   }
 
   void setBrightness(uint8_t brightness)
@@ -149,6 +157,33 @@ namespace Led
       // or any power of 2 below that, to get different effects.
       fadeToBlackBy(pixels, 16 * ledsPerStrip, 4);
     }
+  }
+
+  bool togglePower(void)
+  {
+    return (power = !power);
+  }
+
+  uint8_t brighter()
+  {
+    // TODO UNIMPLEMENTED
+    return 127;
+  }
+
+  uint8_t dimmer()
+  {
+    // TODO UNIMPLEMENTED
+    return 127;
+  }
+
+  void testPattern()
+  {
+    // TODO UNIMPLEMENTED
+  }
+
+  void setSolidColor(CRGB rgb)
+  {
+    // TODO UNIMPLEMENTED
   }
 
 }; // namespace Led

@@ -108,6 +108,7 @@ void RouteIRCode(unsigned int code)
     break;
 
   case 0xFF30CF: // DIY1
+  case 0xFF827D: // PLAY
     Led::geneticAlgorithm();
     break;
 

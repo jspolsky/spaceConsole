@@ -12,6 +12,11 @@ namespace Led
 
   static bool power = true;
 
+  uint8_t brightnessOptions[8] = {2, 4, 8, 16, 32, 64, 128, 255};
+  static uint8_t brightnessIndex = 7;
+
+  static CRGB singleColorMode = CRGB::Black; // Black means run genetic programs. Any other color just shows that color
+
   //
   // Which of the physical LEDs that are present are going to
   // get patterns drawn on them?
@@ -53,7 +58,8 @@ namespace Led
     octo.begin();
     pcontroller = new CTeensy4Controller<RGB, WS2811_800kHz>(&octo);
 
-    FastLED.setBrightness(255);
+    FastLED.setBrightness(brightnessOptions[brightnessIndex]);
+
     //FastLED.setCorrection(TypicalLEDStrip);
     //FastLED.setTemperature(DirectSunlight);
     FastLED.addLeds(pcontroller, pixels, numPins * ledsPerStrip);
@@ -63,18 +69,20 @@ namespace Led
   {
     if (power)
     {
-      fnMondrian();
-      FastLED.show();
+      if (singleColorMode.r + singleColorMode.g + singleColorMode.b == 0)
+      {
+        fnMondrian();
+        FastLED.show();
+      }
+      else
+      {
+        FastLED.showColor(singleColorMode);
+      }
     }
     else
     {
       FastLED.showColor(0);
     }
-  }
-
-  void setBrightness(uint8_t brightness)
-  {
-    FastLED.setBrightness(brightness);
   }
 
   uint16_t getFPS()
@@ -166,24 +174,34 @@ namespace Led
 
   uint8_t brighter()
   {
-    // TODO UNIMPLEMENTED
-    return 127;
+    uint8_t result;
+
+    brightnessIndex = min(7, brightnessIndex + 1);
+    FastLED.setBrightness(result = brightnessOptions[brightnessIndex]);
+    return result;
   }
 
   uint8_t dimmer()
   {
-    // TODO UNIMPLEMENTED
-    return 127;
+    uint8_t result;
+
+    if (brightnessIndex > 0)
+    {
+      brightnessIndex--;
+    }
+
+    FastLED.setBrightness(result = brightnessOptions[brightnessIndex]);
+    return result;
   }
 
-  void testPattern()
+  void geneticAlgorithm()
   {
-    // TODO UNIMPLEMENTED
+    singleColorMode = CRGB::Black;
   }
 
   void setSolidColor(CRGB rgb)
   {
-    // TODO UNIMPLEMENTED
+    singleColorMode = rgb;
   }
 
 }; // namespace Led

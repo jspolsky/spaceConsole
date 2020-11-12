@@ -21,6 +21,8 @@ void setup()
   Alnum::setup();
   Alnum::writeString("SPACE TURTLES");
   Remote::setup();
+
+  pinMode(5, INPUT_PULLUP);
 }
 
 void loop()
@@ -56,6 +58,14 @@ void loop()
   }
 
   Alnum::loop();
+
+  static uint8_t btnLast = 0;
+  uint8_t btn = digitalRead(5);
+  if (btn != btnLast)
+  {
+    dbgprintf("button %d\n", btn);
+    btnLast = btn;
+  }
 }
 
 void RouteIRCode(unsigned int code)
@@ -98,7 +108,7 @@ void RouteIRCode(unsigned int code)
     break;
 
   case 0xFF30CF: // DIY1
-    Led::testPattern();
+    Led::geneticAlgorithm();
     break;
 
     //

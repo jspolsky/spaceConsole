@@ -112,6 +112,10 @@ void RouteIRCode(unsigned int code)
     Led::geneticAlgorithm();
     break;
 
+  case 0xFFB04F:  // DIY2 - test pattern
+    Led::testPattern();
+    break;
+
     //
     // Here are all the colors:
     //

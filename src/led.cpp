@@ -12,11 +12,19 @@ namespace Led
 
   static bool power = true;
 
-  uint8_t brightnessOptions[8] = {2, 4, 8, 16, 32, 64, 128, 255};
-  static uint8_t brightnessIndex = 7;
+  uint8_t brightnessOptions[15] = {2, 4, 8, 12, 16, 24, 32, 48, 56, 64, 72, 96, 128, 168, 255};
+  static uint8_t brightnessIndex = 14;
 
-  static CRGB singleColorMode = CRGB::Black; // Black means run genetic programs. Any other color just shows that color
+  enum mode_t
+  {
+    mode_singleColor,
+    mode_genetic,
+    mode_testPattern
+  };
 
+  static mode_t mode = mode_testPattern;
+
+  static CRGB singleColorMode = CRGB::Black;
   //
   // Which of the physical LEDs that are present are going to
   // get patterns drawn on them?
@@ -36,7 +44,7 @@ namespace Led
   // represent one line from the bottom to the top, so, for example, pins 25 - 28
   // are a single line of 1200 LEDs, addressed as pixels[0..1199].
   //
-  // Pin 14 is for RGB pushbuttons on the control panel.
+  // Pin 14 is for five RGB pushbuttons on the control panel.
 
   const int numPins = 17;
   byte pinList[numPins] = {25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 14};
@@ -69,14 +77,20 @@ namespace Led
   {
     if (power)
     {
-      if (singleColorMode.r + singleColorMode.g + singleColorMode.b == 0)
+      if (mode == mode_genetic)
       {
-        fnMondrian();
+        // fnMondrian();
+        fnOneSecondSweep();
         FastLED.show();
       }
-      else
+      else if (mode == mode_singleColor)
       {
         FastLED.showColor(singleColorMode);
+      }
+      else if (mode == mode_testPattern)
+      {
+        fnTestPattern();
+        FastLED.show();
       }
     }
     else
@@ -130,6 +144,12 @@ namespace Led
       All4Strips(i, CHSV(hue, 255, 128));
     }
 
+    EVERY_N_MILLIS(10)
+    {
+      // optional variant adds a gentle little fade at the top
+      fadeToBlackBy(pixels, 16 * ledsPerStrip, 8);
+    }
+
     pixels[4800] =
         pixels[4801] = CHSV(hue, 255, 128); // 4800 is the first button ... for now
   }
@@ -167,6 +187,48 @@ namespace Led
     }
   }
 
+  void fnTestPattern()
+  {
+    static uint8_t hue = 0;
+
+    EVERY_N_MILLISECONDS(100)
+    {
+      hue = (hue + 1) & 0xFF;
+    }
+
+    for (int i = 0; i < 1200; i++)
+    {
+      pixels[i] = CHSV(32, 255, 196);
+      pixels[i + 1200] = CHSV(96, 255, 196);
+      pixels[i + 2400] = CHSV(160, 255, 196);
+      pixels[i + 3600] = CHSV(224, 255, 196);
+    }
+
+    for (uint8_t level = 0; level < 4; level++) {
+
+      uint8_t block_size = 6 * (level+1);
+      uint16_t bounce_pos = cubicwave8((millis() / 32) & 0xFF) * (300 - block_size) / 256;
+
+      for (uint16_t i = 0; i < block_size; i++) 
+      {
+        for (uint16_t j = 0; j < 4; j++) {
+
+          if (bounce_pos + i < 300) {
+            pixels[j*1200 + level*300 + bounce_pos + i] = (i % 6) ? CRGB::White: CRGB::Black;
+          }
+
+        }
+      }      
+      
+
+      for (int i = 0; i < 4; i++)
+      { 
+        pixels[i*1200 + level*300] = pixels[i*1200 + level*300 +299] = CHSV(hue, 255, 255);
+      }
+
+    }
+  }
+
   bool togglePower(void)
   {
     return (power = !power);
@@ -176,7 +238,7 @@ namespace Led
   {
     uint8_t result;
 
-    brightnessIndex = min(7, brightnessIndex + 1);
+    brightnessIndex = min(14, brightnessIndex + 1);
     FastLED.setBrightness(result = brightnessOptions[brightnessIndex]);
     return result;
   }
@@ -196,12 +258,18 @@ namespace Led
 
   void geneticAlgorithm()
   {
-    singleColorMode = CRGB::Black;
+    mode = mode_genetic;
+  }
+
+  void testPattern()
+  {
+    mode = mode_testPattern;
   }
 
   void setSolidColor(CRGB rgb)
   {
     singleColorMode = rgb;
+    mode = mode_singleColor;
   }
 
 }; // namespace Led

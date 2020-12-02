@@ -10,9 +10,10 @@ namespace Led
     uint8_t brighter();
     uint8_t dimmer();
     void geneticAlgorithm();
+    void testPattern();
     void setSolidColor(CRGB);
 
     void fnOneSecondSweep();
     void fnMondrian();
-    void fnPaletteTester();
+    void fnTestPattern();
 }; // namespace Led

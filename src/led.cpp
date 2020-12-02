@@ -150,8 +150,8 @@ namespace Led
       fadeToBlackBy(pixels, 16 * ledsPerStrip, 8);
     }
 
-    pixels[4800] =
-        pixels[4801] = CHSV(hue, 255, 128); // 4800 is the first button ... for now
+    for (uint16_t i = 4800; i < 4805; i++)
+      pixels[i] = CHSV(hue, 255, 128); // 4800 is the first button ... for now
   }
 
   // show little pulses of nice colors

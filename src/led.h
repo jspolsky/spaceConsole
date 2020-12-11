@@ -12,7 +12,9 @@ namespace Led
     void geneticAlgorithm();
     void testPattern();
     void setSolidColor(CRGB);
+    void Mirror4Strips();
 
+    void fnNoise();
     void fnOneSecondSweep();
     void fnMondrian();
     void fnTestPattern();

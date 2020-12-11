@@ -22,7 +22,7 @@ namespace Led
     mode_testPattern
   };
 
-  static mode_t mode = mode_testPattern;
+  static mode_t mode = mode_genetic; // TODO change back to mode_testPattern;
 
   static CRGB singleColorMode = CRGB::Black;
   //
@@ -80,7 +80,8 @@ namespace Led
       if (mode == mode_genetic)
       {
         // fnMondrian();
-        fnOneSecondSweep();
+        // fnOneSecondSweep();
+        fnNoise();
         FastLED.show();
       }
       else if (mode == mode_singleColor)
@@ -112,10 +113,49 @@ namespace Led
                 pixels[i + FIRST_LED + 3600] = color;
   }
 
+  // copies the first strip to all four strips
+  void Mirror4Strips()
+  {
+    for (uint16_t i = 1200; i <= 3600; i += 1200)
+      for (uint16_t j = 0; j < 1200; j++)
+        pixels[i+j] = pixels[j];
+  }
+
+
   //
   // for now, all functions named "fn" are loop() implementations. Each one implements a different
   // pattern / style / gene.
   //
+
+  // delightful bright noise function
+  void fnNoise()
+  {
+
+    static uint16_t  x = 0;
+    int              scale = 3;   // lower numbers: bigger blobs of color. Higher numbers: smaller blobs.
+    static uint16_t  t = 0;
+
+    for (uint16_t i = FIRST_LED; i < FIRST_LED+NUM_LEDS; i++) {
+        uint8_t noise = inoise8(i*scale+x,t);
+        uint8_t hue = map(noise, 50, 190, 0, 255);      // spread results out into 0-255 hue range.
+                                                        // try other ranges, like 0-64 for orange/yellow or 96-180 for bluegreen https://github.com/FastLED/FastLED/wiki/FastLED-HSV-Colors
+        pixels[i] = CHSV(hue, 255, 128);
+    }
+
+    EVERY_N_MILLISECONDS(10)
+    {
+        // adjusting x slides the whole pattern up and down
+        // subtracting from x slides the pattern up the antenna
+        // adding to x slides the pattern down the antenna
+//      x -= 10;      // lower numbers: slower. Higher numbers: faster. 10 is kinda average.
+
+        // adjusting t morphs the whole pattern smoothly
+        t += 3;        // 1 is probably too slow. 10 is about as fast as you can see!
+    }
+
+    Mirror4Strips();
+  }
+
 
   // zap a nice color from bottom to top every second.
   void fnOneSecondSweep()

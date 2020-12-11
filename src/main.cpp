@@ -107,13 +107,13 @@ void RouteIRCode(unsigned int code)
     OLED::status(3, rgchBuf);
     break;
 
-  case 0xFF30CF: // DIY1
-  case 0xFF827D: // PLAY
-    Led::geneticAlgorithm();
+  case 0xFF30CF: // DIY1 - test pattern
+    Led::testPattern();
     break;
 
-  case 0xFFB04F:  // DIY2 - test pattern
-    Led::testPattern();
+  case 0xFFB04F: // DIY2 
+  case 0xFF827D: // PLAY
+    Led::geneticAlgorithm();
     break;
 
     //

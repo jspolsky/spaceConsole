@@ -132,22 +132,25 @@ namespace Led
   {
 
     static uint16_t  x = 0;
-    int              scale = 3;   // lower numbers: bigger blobs of color. Higher numbers: smaller blobs.
+    int              scale = 6;   // lower numbers: bigger blobs of color. Higher numbers: smaller blobs.
     static uint16_t  t = 0;
 
     for (uint16_t i = FIRST_LED; i < FIRST_LED+NUM_LEDS; i++) {
         uint8_t noise = inoise8(i*scale+x,t);
         uint8_t hue = map(noise, 50, 190, 0, 255);      // spread results out into 0-255 hue range.
                                                         // try other ranges, like 0-64 for orange/yellow or 96-180 for bluegreen https://github.com/FastLED/FastLED/wiki/FastLED-HSV-Colors
-        pixels[i] = CHSV(hue, 255, 128);
+        pixels[i] = CHSV(hue, 255, beatsin8(120, 128, 255));    // adjust the second param of beatsin. 164 makes a pronounced throb. 192 is gently throb. 64 is rock and roll
     }
+
+    // actually seriously consider adding beatsin8() to the global brightness as a completely independent genome, for
+    // all patterns. 
 
     EVERY_N_MILLISECONDS(10)
     {
         // adjusting x slides the whole pattern up and down
         // subtracting from x slides the pattern up the antenna
         // adding to x slides the pattern down the antenna
-//      x -= 10;      // lower numbers: slower. Higher numbers: faster. 10 is kinda average.
+        x -= 7;      // lower numbers: slower. Higher numbers: faster. 10 is kinda average.
 
         // adjusting t morphs the whole pattern smoothly
         t += 3;        // 1 is probably too slow. 10 is about as fast as you can see!

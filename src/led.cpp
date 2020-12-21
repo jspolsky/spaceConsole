@@ -82,6 +82,8 @@ namespace Led
         // fnMondrian();
         // fnOneSecondSweep();
         fnNoise();
+        // fnThrobBrightness();     // TODO this should be a part of the genetic code
+
         FastLED.show();
       }
       else if (mode == mode_singleColor)
@@ -118,47 +120,130 @@ namespace Led
   {
     for (uint16_t i = 1200; i <= 3600; i += 1200)
       for (uint16_t j = 0; j < 1200; j++)
-        pixels[i+j] = pixels[j];
+        pixels[i + j] = pixels[j];
   }
-
 
   //
   // for now, all functions named "fn" are loop() implementations. Each one implements a different
   // pattern / style / gene.
   //
 
+  DEFINE_GRADIENT_PALETTE(heatmap_gp){
+      0, 0, 0, 0,
+      128, 255, 0, 0,
+      200, 255, 255, 0,
+      255, 255, 255, 255};
+
+  DEFINE_GRADIENT_PALETTE(ocean_gp){
+      0, 0, 128, 0,
+      96, 0, 128, 64,
+      160, 0, 64, 128,
+      255, 0, 0, 128};
+
+  // Gradient palette "bhw1_sunset2_gp", originally from
+  // http://soliton.vm.bytemark.co.uk/pub/cpt-city/bhw/bhw1/tn/bhw1_sunset2.png.index.html
+  // converted for FastLED with gammas (2.6, 2.2, 2.5)
+  // Size: 20 bytes of program space.
+
+  DEFINE_GRADIENT_PALETTE(sunset_gp){
+      0, 255, 175, 8,
+      81, 237, 29, 10,
+      137, 148, 57, 42,
+      165, 68, 54, 54,
+      255, 18, 23, 29};
+
+  // Gradient palette "radial_eyeball_brown_gp", originally from
+  // http://soliton.vm.bytemark.co.uk/pub/cpt-city/ocal/tn/radial-eyeball-brown.png.index.html
+  // converted for FastLED with gammas (2.6, 2.2, 2.5)
+  // Size: 44 bytes of program space.
+
+  DEFINE_GRADIENT_PALETTE(eyeball_brown_gp){
+      0, 0, 0, 0,
+      38, 0, 0, 0,
+      51, 255, 97, 0,
+      102, 82, 4, 2,
+      109, 82, 4, 2,
+      114, 255, 97, 0,
+      121, 255, 255, 255,
+      229, 255, 255, 255,
+      249, 255, 191, 184,
+      255, 255, 0, 0};
+
+  // Gradient palette "Caribbean_gp", originally from
+  // http://soliton.vm.bytemark.co.uk/pub/cpt-city/vh/tn/Caribbean.png.index.html
+  // converted for FastLED with gammas (2.6, 2.2, 2.5)
+  // Size: 144 bytes of program space.
+
+  DEFINE_GRADIENT_PALETTE(caribbean_gp){
+      0, 0, 0, 43,
+      36, 0, 10, 106,
+      60, 1, 32, 147,
+      84, 1, 79, 138,
+      109, 3, 104, 156,
+      133, 17, 118, 176,
+      145, 35, 118, 176,
+      170, 82, 133, 156,
+      194, 95, 175, 207,
+      213, 173, 203, 242,
+      223, 75, 73, 24,
+      233, 144, 111, 27,
+      237, 184, 125, 27,
+      245, 242, 166, 24,
+      255, 242, 223, 197};
+
+  CRGBPalette16 heatmap = heatmap_gp;
+  CRGBPalette16 ocean = ocean_gp;
+  CRGBPalette16 sunset = sunset_gp;
+  CRGBPalette16 eyeball_brown = eyeball_brown_gp;
+  CRGBPalette16 caribbean = caribbean_gp;
+
   // delightful bright noise function
   void fnNoise()
   {
 
-    static uint16_t  x = 0;
-    int              scale = 6;   // lower numbers: bigger blobs of color. Higher numbers: smaller blobs.
-    static uint16_t  t = 0;
+    static uint16_t x = 0;
+    int scale = 6; // lower numbers: bigger blobs of color. Higher numbers: smaller blobs.
+    static uint16_t t = 0;
 
-    for (uint16_t i = FIRST_LED; i < FIRST_LED+NUM_LEDS; i++) {
-        uint8_t noise = inoise8(i*scale+x,t);
-        uint8_t hue = map(noise, 50, 190, 0, 255);      // spread results out into 0-255 hue range.
-                                                        // try other ranges, like 0-64 for orange/yellow or 96-180 for bluegreen https://github.com/FastLED/FastLED/wiki/FastLED-HSV-Colors
-        pixels[i] = CHSV(hue, 255, beatsin8(120, 128, 255));    // adjust the second param of beatsin. 164 makes a pronounced throb. 192 is gently throb. 64 is rock and roll
+    for (uint16_t i = FIRST_LED; i < FIRST_LED + NUM_LEDS; i++)
+    {
+      uint8_t noise = inoise8(i * scale + x, t);
+      uint8_t hue = map(noise, 50, 190, 0, 255); // spread results out into 0-255 hue range.
+                                                 // try other ranges, like 0-64 for orange/yellow or 96-180 for bluegreen https://github.com/FastLED/FastLED/wiki/FastLED-HSV-Colors
+
+      // OPTION ONE - just use hue to get a full-rainbow
+      pixels[i] = CHSV(hue, 255, 255); // adjust the second param of beatsin. 164 makes a pronounced throb. 192 is gently throb. 64 is rock and roll
+      // OPTION TWO - pick color from a palette
+      // pixels[i] = ColorFromPalette(caribbean, hue);
     }
 
     // actually seriously consider adding beatsin8() to the global brightness as a completely independent genome, for
-    // all patterns. 
+    // all patterns.
 
     EVERY_N_MILLISECONDS(10)
     {
-        // adjusting x slides the whole pattern up and down
-        // subtracting from x slides the pattern up the antenna
-        // adding to x slides the pattern down the antenna
-        x -= 7;      // lower numbers: slower. Higher numbers: faster. 10 is kinda average.
+      // adjusting x slides the whole pattern up and down
+      // subtracting from x slides the pattern up the antenna
+      // adding to x slides the pattern down the antenna
+      x -= 7; // lower numbers: slower. Higher numbers: faster. 10 is kinda average.
 
-        // adjusting t morphs the whole pattern smoothly
-        t += 3;        // 1 is probably too slow. 10 is about as fast as you can see!
+      // adjusting t morphs the whole pattern smoothly
+      t += 3; // 1 is probably too slow. 10 is about as fast as you can see!
     }
 
     Mirror4Strips();
   }
 
+  void fnThrobBrightness()
+  {
+    // adjusts the global brightness using a beat
+
+    // first param is BPM
+    // second param is min
+    // third param is max
+
+    FastLED.setBrightness(beatsin8(120, 0, brightnessOptions[brightnessIndex]));
+  }
 
   // zap a nice color from bottom to top every second.
   void fnOneSecondSweep()
@@ -247,28 +332,28 @@ namespace Led
       pixels[i + 3600] = CHSV(224, 255, 196);
     }
 
-    for (uint8_t level = 0; level < 4; level++) {
+    for (uint8_t level = 0; level < 4; level++)
+    {
 
-      uint8_t block_size = 6 * (level+1);
+      uint8_t block_size = 6 * (level + 1);
       uint16_t bounce_pos = cubicwave8((millis() / 32) & 0xFF) * (300 - block_size) / 256;
 
-      for (uint16_t i = 0; i < block_size; i++) 
+      for (uint16_t i = 0; i < block_size; i++)
       {
-        for (uint16_t j = 0; j < 4; j++) {
+        for (uint16_t j = 0; j < 4; j++)
+        {
 
-          if (bounce_pos + i < 300) {
-            pixels[j*1200 + level*300 + bounce_pos + i] = (i % 6) ? CRGB::White: CRGB::Black;
+          if (bounce_pos + i < 300)
+          {
+            pixels[j * 1200 + level * 300 + bounce_pos + i] = (i % 6) ? CRGB::White : CRGB::Black;
           }
-
         }
-      }      
-      
-
-      for (int i = 0; i < 4; i++)
-      { 
-        pixels[i*1200 + level*300] = pixels[i*1200 + level*300 +299] = CHSV(hue, 255, 255);
       }
 
+      for (int i = 0; i < 4; i++)
+      {
+        pixels[i * 1200 + level * 300] = pixels[i * 1200 + level * 300 + 299] = CHSV(hue, 255, 255);
+      }
     }
   }
 

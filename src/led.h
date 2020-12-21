@@ -9,6 +9,7 @@ namespace Led
     bool togglePower();
     uint8_t brighter();
     uint8_t dimmer();
+    void fnThrobBrightness();
     void geneticAlgorithm();
     void testPattern();
     void setSolidColor(CRGB);

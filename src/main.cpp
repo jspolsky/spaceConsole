@@ -7,6 +7,7 @@
 #include "oled.h"
 #include "alnum.h"
 #include "remote.h"
+#include "buttons.h"
 
 char *itoa(int value, char *str, int base);
 void RouteIRCode(unsigned int code);
@@ -21,8 +22,7 @@ void setup()
   Alnum::setup();
   Alnum::writeString("TURTLES 2.0");
   Remote::setup();
-
-  pinMode(5, INPUT_PULLUP);
+  Buttons::setup();
 }
 
 void loop()
@@ -58,14 +58,8 @@ void loop()
   }
 
   Alnum::loop();
+  Buttons::loop();
 
-  static uint8_t btnLast = 0;
-  uint8_t btn = digitalRead(5);
-  if (btn != btnLast)
-  {
-    dbgprintf("button %d\n", btn);
-    btnLast = btn;
-  }
 }
 
 void RouteIRCode(unsigned int code)
@@ -80,11 +74,11 @@ void RouteIRCode(unsigned int code)
   case 0xFF02FD: // POWER
     if (Led::togglePower())
     {
-      // UNIMPLEMENTED
+      OLED::status(2, "Power On");
     }
     else
     {
-      // UNIMPLEMENTED
+      OLED::status(2, "Power Off");
     }
     break;
 

@@ -9,7 +9,6 @@
 
 namespace Led
 {
-
   static bool power = true;
 
   uint8_t brightnessOptions[15] = {2, 4, 8, 12, 16, 24, 32, 48, 56, 64, 72, 96, 128, 168, 255};

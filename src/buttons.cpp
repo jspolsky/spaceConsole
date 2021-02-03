@@ -10,7 +10,8 @@ namespace Buttons
             pinMode(i, INPUT_PULLUP);
     }
 
-    void loop()
+    // returns 0 if nothing happened or 1-5 if a button has just been pressed
+    int loop()
     {
         static uint8_t btnLast[5] = {1, 1, 1, 1, 1};
         for (int i = 5; i < 10; i++)
@@ -18,9 +19,12 @@ namespace Buttons
             uint8_t btn = digitalRead(i);
             if (btn != btnLast[i - 5])
             {
-                dbgprintf("button %d %d\n", 10 - i, 1 - btn);
                 btnLast[i - 5] = btn;
+                if (btn == 0)
+                    return (10 - i);
             }
         }
+
+        return 0;
     }
 } // namespace Buttons

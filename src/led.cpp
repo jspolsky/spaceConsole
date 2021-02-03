@@ -10,6 +10,7 @@
 namespace Led
 {
   static bool power = true;
+  static int buttonStatus = 0;
 
   uint8_t brightnessOptions[15] = {2, 4, 8, 12, 16, 24, 32, 48, 56, 64, 72, 96, 128, 168, 255};
   static uint8_t brightnessIndex = 14;
@@ -72,6 +73,10 @@ namespace Led
   {
     if (power)
     {
+
+      for (int i = 1; i <= 5; i++)
+        pixels[4799 + i] = buttonStatus >= i ? CRGB(CHSV((i - 1) * 50, 255, 255)) : CRGB::Black;
+
       if (mode == mode_genetic)
       {
         // fnMondrian();
@@ -393,6 +398,11 @@ namespace Led
   {
     singleColorMode = rgb;
     mode = mode_singleColor;
+  }
+
+  void setButtonStatus(int buttonStatusNew)
+  {
+    buttonStatus = buttonStatusNew;
   }
 
 }; // namespace Led

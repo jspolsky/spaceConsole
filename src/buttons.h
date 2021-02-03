@@ -3,5 +3,5 @@
 namespace Buttons
 {
     void setup();
-    void loop();
+    int loop();
 };

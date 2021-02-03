@@ -56,7 +56,12 @@ void loop()
   }
 
   Alnum::loop();
-  Buttons::loop();
+
+  int buttonStatusNew = Buttons::loop();
+  if (buttonStatusNew)
+  {
+    Led::setButtonStatus(buttonStatusNew);
+  }
 }
 
 void RouteIRCode(unsigned int code)

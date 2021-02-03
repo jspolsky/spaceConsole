@@ -14,6 +14,7 @@ namespace Led
     void testPattern();
     void setSolidColor(CRGB);
     void Mirror4Strips();
+    void setButtonStatus(int);
 
     void fnNoise();
     void fnOneSecondSweep();

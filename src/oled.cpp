@@ -17,7 +17,6 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
 namespace OLED
 {
-
     bool fDisplayOK = false;
     bool fOn = false;
     char lines[4][CB_DISPLAY_LINE];

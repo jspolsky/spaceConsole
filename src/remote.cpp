@@ -6,7 +6,6 @@
 
 namespace Remote
 {
-
     IRrecv irrecv(pinIRReceiver);
     decode_results results;
     unsigned long lastResult; // only valid if loop() returns true

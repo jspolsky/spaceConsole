@@ -7,7 +7,6 @@
 
 namespace Alnum
 {
-
     Adafruit_AlphaNum4 alpha4[4];
 
     void setup()

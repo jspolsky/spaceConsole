@@ -14,7 +14,6 @@ void RouteIRCode(unsigned int code);
 
 void setup()
 {
-
   Util::setup();
   Led::setup();
   OLED::setup();
@@ -27,7 +26,6 @@ void setup()
 
 void loop()
 {
-
   char s[16];
   static unsigned int lastIrCode = 0;
 
@@ -59,7 +57,6 @@ void loop()
 
   Alnum::loop();
   Buttons::loop();
-
 }
 
 void RouteIRCode(unsigned int code)
@@ -105,7 +102,7 @@ void RouteIRCode(unsigned int code)
     Led::testPattern();
     break;
 
-  case 0xFFB04F: // DIY2 
+  case 0xFFB04F: // DIY2
   case 0xFF827D: // PLAY
     Led::geneticAlgorithm();
     break;

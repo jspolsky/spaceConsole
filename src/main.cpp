@@ -19,7 +19,7 @@ void setup()
   OLED::setup();
   OLED::status(0, "Space Console 2.0");
   Alnum::setup();
-  Alnum::writeString("SPACE TURTLES");
+  Alnum::writeString("TURTLES 2.0");
   Remote::setup();
 
   pinMode(5, INPUT_PULLUP);

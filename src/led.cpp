@@ -30,11 +30,7 @@ namespace Led
   // get patterns drawn on them?
   //
 
-  const uint32_t FIRST_LED = 0;  // LAB
-  const uint32_t NUM_LEDS = 300; // LAB
-
-  // const uint32_t FIRST_LED = 400;  // ANTENNA
-  // const uint32_t NUM_LEDS = 800;   // ANTENNA
+  const uint32_t NUM_LEDS = 1200; // LAB
 
   //
   // Physical arrangement of LEDs
@@ -109,10 +105,10 @@ namespace Led
 
   void All4Strips(uint32_t i, CRGB color)
   {
-    pixels[i + FIRST_LED] =
-        pixels[i + FIRST_LED + 1200] =
-            pixels[i + FIRST_LED + 2400] =
-                pixels[i + FIRST_LED + 3600] = color;
+    pixels[i] =
+        pixels[i + 1200] =
+            pixels[i + 2400] =
+                pixels[i + 3600] = color;
   }
 
   // copies the first strip to all four strips
@@ -205,7 +201,7 @@ namespace Led
     int scale = 6; // lower numbers: bigger blobs of color. Higher numbers: smaller blobs.
     static uint16_t t = 0;
 
-    for (uint16_t i = FIRST_LED; i < FIRST_LED + NUM_LEDS; i++)
+    for (uint16_t i = 0; i < NUM_LEDS; i++)
     {
       uint8_t noise = inoise8(i * scale + x, t);
       uint8_t hue = map(noise, 50, 190, 0, 255); // spread results out into 0-255 hue range.

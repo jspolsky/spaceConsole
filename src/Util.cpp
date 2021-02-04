@@ -34,11 +34,21 @@ namespace Util
     }
 } // namespace Util
 
+void binaryPrint( char* rgchDest, uint32_t i )
+{
+    for (uint32_t mask = 0x8000; mask; mask >>= 1)
+    {
+        *rgchDest++ = i & mask ? '1' : '0';
+    }
+    *rgchDest = '\0';
+}
+
 void dbgprintf(char const *pszFmt UNUSED_IN_RELEASE, ...)
 {
 
 #ifdef DEBUG_SC
     char const *pszTmp;
+    char rgchTmp[33];
 
     va_list argv;
     va_start(argv, pszFmt);
@@ -57,7 +67,12 @@ void dbgprintf(char const *pszFmt UNUSED_IN_RELEASE, ...)
 
             case 'x':
             case 'X':
-                Serial.print(va_arg(argv, int), HEX);
+                Serial.print(va_arg(argv, uint32_t), HEX);
+                break;
+
+            case 'b':
+                binaryPrint(rgchTmp, va_arg(argv, uint32_t));
+                Serial.print(rgchTmp);
                 break;
 
             case 'l':

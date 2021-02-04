@@ -8,6 +8,7 @@
 #include "alnum.h"
 #include "remote.h"
 #include "buttons.h"
+#include "genetics.h"
 
 char *itoa(int value, char *str, int base);
 void RouteIRCode(unsigned int code);
@@ -15,6 +16,7 @@ void RouteIRCode(unsigned int code);
 void setup()
 {
   Util::setup();
+  Genetics::setup();
   Led::setup();
   OLED::setup();
   OLED::status(0, "Space Console 2.0");

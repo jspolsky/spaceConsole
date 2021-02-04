@@ -23,6 +23,7 @@ namespace Genetics
 
     void setup();
     void init_random_pool();
+    void add_child_to_pool(sequence_t sequence, fitness_t fitness);
     void calc_p_cum();
     void dump_pool_to_console();
     sequence_t get_random_parent();

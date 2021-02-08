@@ -73,9 +73,16 @@ namespace Led
   {
     if (power)
     {
-
-      for (int i = 1; i <= 5; i++)
-        pixels[4799 + i] = buttonStatus >= i ? CRGB(CHSV((i - 1) * 50, 255, 255)) : CRGB::Black;
+      if (buttonStatus == 0) {
+        // prompt for vote with cylon
+        int litbutton = (millis() / 250) % 5;
+        for (int i = 0; i <= 4; i++)
+          pixels[4800 + i] = litbutton == i ? CRGB(CHSV((i - 1) * 50, 255, 255)) : CRGB::Black;
+      }
+      else {
+        for (int i = 1; i <= 5; i++)
+          pixels[4799 + i] = buttonStatus >= i ? CRGB(CHSV((i - 1) * 50, 255, 255)) : CRGB::Black;
+      }
 
       if (mode == mode_genetic)
       {

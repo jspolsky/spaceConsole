@@ -66,11 +66,12 @@ void loop()
   }
 
   Alnum::loop();
+  Genetics::loop();
 
   int buttonStatusNew = Buttons::loop();
   if (buttonStatusNew)
   {
-    Led::setButtonStatus(buttonStatusNew);
+    Genetics::record_vote(buttonStatusNew);
   }
 }
 

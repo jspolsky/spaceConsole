@@ -28,5 +28,9 @@ namespace Genetics
     void dump_pool_to_console();
     sequence_t get_random_parent();
     sequence_t get_child();
+    void acgt_from_sequence(char* rgch, sequence_t sequence);
 
+    void start_cycle();
+    void loop();
+    void record_vote(fitness_t fitness);
 };

@@ -15,20 +15,19 @@ void RouteIRCode(unsigned int code);
 
 void setup()
 {
+  OLED::setup();
+  OLED::status(3, "Booting");
+  Alnum::setup();
+  Alnum::writeString("SPACE TURTLES");
   Util::setup();
   Genetics::setup();
   Led::setup();
-  OLED::setup();
-  OLED::status(0, "Space Console 2.0");
-  Alnum::setup();
-  Alnum::writeString("TURTLES 2.0");
   Remote::setup();
   Buttons::setup();
 }
 
 void loop()
 {
-  char s[16];
   static unsigned int lastIrCode = 0;
 
   Led::loop();
@@ -51,10 +50,19 @@ void loop()
     }
   }
 
-  EVERY_N_MILLISECONDS(1000)
+  // uncomment this to check frame rate
+  // EVERY_N_MILLISECONDS(1000)
+  // {
+  // 
+  //   char s[16];
+  // 
+  //   sprintf(s, "%d fps", Led::getFPS());
+  //   OLED::status(3, s);
+  // }
+
+  EVERY_N_MILLISECONDS(15000)
   {
-    itoa(Led::getFPS(), s, 10);
-    OLED::status(1, s);
+    OLED::status(3,"");
   }
 
   Alnum::loop();
@@ -78,11 +86,11 @@ void RouteIRCode(unsigned int code)
   case 0xFF02FD: // POWER
     if (Led::togglePower())
     {
-      OLED::status(2, "Power On");
+      OLED::status(3, "Power On");
     }
     else
     {
-      OLED::status(2, "Power Off");
+      OLED::status(3, "Power Off");
     }
     break;
 

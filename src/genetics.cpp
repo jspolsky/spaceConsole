@@ -177,18 +177,23 @@ namespace Genetics
         if (sequence_fitness == 1 || sequence_fitness == 2)
             remaining_seconds = 3 - elapsed_seconds;
         
-        if (remaining_seconds < 0)
+        if (remaining_seconds < 0) {
             remaining_seconds = 0;
+        }
 
-        if (sequence_fitness == 0) {
-            // no vote yet
-            EVERY_N_MILLISECONDS(1000) {
-                if (elapsed_seconds % 5 == 3) {
-                    Alnum::writeString("  PLEASE RATE");
+        // no vote yet
+        EVERY_N_MILLISECONDS(1000) {
+            if (elapsed_seconds % 5 == 3) {
+                if (sequence_fitness == 0) {
+                    Alnum::writeString("PLEASE RATE");
+                } else {
+                    char rgchSt[17];
+                    sprintf(rgchSt, "RATED %d STARS", sequence_fitness);
+                    Alnum::writeString(rgchSt);
                 }
-                else {
-                    Alnum::writeString(sequence_as_string);
-                }
+            }
+            else {
+                Alnum::writeString(sequence_as_string);
             }
         }
 
@@ -210,10 +215,10 @@ namespace Genetics
     void record_vote(fitness_t fitness) {
         sequence_fitness = fitness;
         Led::setButtonStatus(sequence_fitness);
-        Alnum::writeString(sequence_as_string);
+        char rgchSt[17];
+        sprintf(rgchSt, "RATED %d STARS", fitness);
+        Alnum::writeString(rgchSt);
         
-        char rgchSt[16];
-        sprintf(rgchSt, "Your vote: %d", fitness);
         OLED::status(0, rgchSt);
     }
     

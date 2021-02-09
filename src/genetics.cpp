@@ -30,10 +30,14 @@ namespace Genetics
     void calc_p_cum()
     {
         uint16_t p_cum = 0;
+        uint16_t sum = 0;
         for (uint32_t i = 0; i < POOL_SIZE; i++) {
             p_cum += PROB_FROM_FITNESS[pool[i].fitness];
+            sum += pool[i].fitness;
             pool[i].p_cum = p_cum;
         }
+
+        dbgprintf("Average fitness is now %f\n", (double) sum / (double) POOL_SIZE);
     }
 
     void add_child_to_pool(sequence_t sequence, fitness_t fitness)
@@ -180,7 +184,7 @@ namespace Genetics
             // no vote yet
             EVERY_N_MILLISECONDS(1000) {
                 if (elapsed_seconds % 5 == 3) {
-                    Alnum::writeString("  PLEASE VOTE");
+                    Alnum::writeString("  PLEASE RATE");
                 }
                 else {
                     Alnum::writeString(sequence_as_string);
@@ -195,7 +199,10 @@ namespace Genetics
         }
 
         if (remaining_seconds <= 0) {
-            add_child_to_pool( sequence_current, sequence_fitness );
+            if (sequence_fitness) {
+                dbgprintf("vote recorded %d\n", sequence_fitness);
+                add_child_to_pool( sequence_current, sequence_fitness );
+            }
             start_cycle();
         }
     }

@@ -26,29 +26,29 @@ namespace OLED
 
         fDisplayOK = fOn = false;
 
-        dbgprintf("Looking for OLED\n");
-        // is there an OLED connected?
-        Wire.begin();
-        Wire.beginTransmission(SCREEN_I2C_ADDR);
-        if (Wire.endTransmission())
-        {
-            dbgprintf("No OLED\n");
-            return;
-        }
-        dbgprintf("OLED found\n");
+        // dbgprintf("Looking for OLED\n");
+        // // is there an OLED connected?
+        // Wire.begin();
+        // Wire.beginTransmission(SCREEN_I2C_ADDR);
+        // if (Wire.endTransmission())
+        // {
+        //     dbgprintf("No OLED\n");
+        //     return;
+        // }
+        // dbgprintf("OLED found\n");
 
-        // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-        if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_I2C_ADDR))
-        {
-            dbgprintf("SSD1306 allocation failed\n");
-            return;
-        }
+        // // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+        // if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_I2C_ADDR))
+        // {
+        //     dbgprintf("SSD1306 allocation failed\n");
+        //     return;
+        // }
 
-        display.setTextSize(1);              // Normal 1:1 pixel scale
-        display.setTextColor(SSD1306_WHITE); // Draw white text
-        display.cp437(true);                 // Use full 256 char 'Code Page 437' font
+        // display.setTextSize(1);              // Normal 1:1 pixel scale
+        // display.setTextColor(SSD1306_WHITE); // Draw white text
+        // display.cp437(true);                 // Use full 256 char 'Code Page 437' font
 
-        fDisplayOK = fOn = true;
+        // fDisplayOK = fOn = true;
     }
 
     void write_lines()

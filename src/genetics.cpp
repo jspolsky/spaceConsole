@@ -162,7 +162,8 @@ namespace Genetics
         OLED::status(0, "Please vote");
         dbgprintf("new cycle, trying %b at time %d\n", sequence_current, sequence_start_time);
         acgt_from_sequence(sequence_as_string, sequence_current);
-        Alnum::writeString(sequence_as_string);
+        Alnum::setMainMessage(sequence_as_string);
+        Alnum::setSecondaryMessage("PLEASE RATE 1-5");
     }
     
     void loop()
@@ -181,27 +182,12 @@ namespace Genetics
             remaining_seconds = 0;
         }
 
-        // no vote yet
-        EVERY_N_MILLISECONDS(1000) {
-            if (elapsed_seconds % 5 == 3) {
-                if (sequence_fitness == 0) {
-                    Alnum::writeString("PLEASE RATE");
-                } else {
-                    char rgchSt[17];
-                    sprintf(rgchSt, "RATED %d STARS", sequence_fitness);
-                    Alnum::writeString(rgchSt);
-                }
-            }
-            else {
-                Alnum::writeString(sequence_as_string);
-            }
-        }
 
-        EVERY_N_MILLISECONDS(250) {
-            char rgch[16];
-            sprintf(rgch, "Remaining: %ds", remaining_seconds);
-            OLED::status(1, rgch);
-        }
+        // EVERY_N_MILLISECONDS(250) {
+        //     char rgch[16];
+        //     sprintf(rgch, "Remaining: %ds", remaining_seconds);
+        //     OLED::status(1, rgch);
+        // }
 
         if (remaining_seconds <= 0) {
             if (sequence_fitness) {
@@ -215,11 +201,12 @@ namespace Genetics
     void record_vote(fitness_t fitness) {
         sequence_fitness = fitness;
         Led::setButtonStatus(sequence_fitness);
-        char rgchSt[17];
-        sprintf(rgchSt, "RATED %d STARS", fitness);
-        Alnum::writeString(rgchSt);
+        char s[17];
+        sprintf(s, "RATED %d STARS", fitness);
+        Alnum::setSecondaryMessage(s);
+        Alnum::showOneTime(s);
         
-        OLED::status(0, rgchSt);
+        OLED::status(0, s);
     }
     
     

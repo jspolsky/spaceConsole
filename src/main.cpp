@@ -18,7 +18,7 @@ void setup()
   OLED::setup();
   OLED::status(3, "Booting");
   Alnum::setup();
-  Alnum::writeString("SPACE TURTLES");
+  Alnum::setMainMessage("BOOTING");
   Util::setup();
   Genetics::setup();
   Led::setup();
@@ -87,11 +87,13 @@ void RouteIRCode(unsigned int code)
   case 0xFF02FD: // POWER
     if (Led::togglePower())
     {
-      OLED::status(3, "Power On");
+      // OLED::status(3, "Power On");
+      Alnum::showOneTime("POWER ON");
     }
     else
     {
-      OLED::status(3, "Power Off");
+      // OLED::status(3, "Power Off");
+      Alnum::showOneTime("POWER OFF");
     }
     break;
 
@@ -101,17 +103,19 @@ void RouteIRCode(unsigned int code)
   case 0xFF3AC5: // Brightness up
 
     sprintf(rgchBuf,
-            "Brightness: %d",
+            "BRIGHTNESS %d",
             Led::brighter());
-    OLED::status(3, rgchBuf);
+    // OLED::status(3, rgchBuf);
+    Alnum::showOneTime(rgchBuf);
     break;
 
   case 0xFFBA45: // Brightness down
 
     sprintf(rgchBuf,
-            "Brightness: %d",
+            "BRIGHTNESS %d",
             Led::dimmer());
-    OLED::status(3, rgchBuf);
+    //OLED::status(3, rgchBuf);
+    Alnum::showOneTime(rgchBuf);
     break;
 
   case 0xFF30CF: // DIY1 - test pattern

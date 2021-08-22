@@ -53,16 +53,16 @@ void loop()
   // uncomment this to check frame rate
   // EVERY_N_MILLISECONDS(1000)
   // {
-  // 
+  //
   //   char s[16];
-  // 
+  //
   //   sprintf(s, "%d fps", Led::getFPS());
   //   OLED::status(3, s);
   // }
 
   EVERY_N_MILLISECONDS(15000)
   {
-    OLED::status(3,"");
+    OLED::status(3, "");
   }
 
   Alnum::loop();
@@ -125,6 +125,10 @@ void RouteIRCode(unsigned int code)
   case 0xFFB04F: // DIY2
   case 0xFF827D: // PLAY
     Led::geneticAlgorithm();
+    break;
+
+  case 0xFF708F: // DIY3 - pride
+    Led::pride();
     break;
 
     //
@@ -212,7 +216,10 @@ void RouteIRCode(unsigned int code)
     break;
 
   default:
-    sprintf(rgchBuf, "IR %X ??", code);
-    OLED::status(3, rgchBuf);
+
+    sprintf(rgchBuf,
+            "IR %X ??",
+            code);
+    Alnum::showOneTime(rgchBuf);
   }
 }

@@ -12,6 +12,7 @@ namespace Led
     void fnThrobBrightness();
     void geneticAlgorithm();
     void testPattern();
+    void pride();
     void setSolidColor(CRGB);
     void Mirror4Strips();
     void setButtonStatus(int);
@@ -20,4 +21,5 @@ namespace Led
     void fnOneSecondSweep();
     void fnMondrian();
     void fnTestPattern();
+    void fnPride();
 }; // namespace Led

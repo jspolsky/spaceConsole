@@ -19,7 +19,8 @@ namespace Led
   {
     mode_singleColor,
     mode_genetic,
-    mode_testPattern
+    mode_testPattern,
+    mode_pride,
   };
 
   static mode_t mode = mode_genetic; // TODO change back to mode_testPattern;
@@ -73,13 +74,15 @@ namespace Led
   {
     if (power)
     {
-      if (buttonStatus == 0) {
+      if (buttonStatus == 0)
+      {
         // prompt for vote with cylon
         int litbutton = (millis() / 250) % 5;
         for (int i = 0; i <= 4; i++)
           pixels[4800 + i] = litbutton == i ? CRGB(CHSV((i - 1) * 50, 255, 255)) : CRGB::Black;
       }
-      else {
+      else
+      {
         for (int i = 1; i <= 5; i++)
           pixels[4799 + i] = buttonStatus >= i ? CRGB(CHSV((i - 1) * 50, 255, 255)) : CRGB::Black;
       }
@@ -100,6 +103,11 @@ namespace Led
       else if (mode == mode_testPattern)
       {
         fnTestPattern();
+        FastLED.show();
+      }
+      else if (mode == mode_pride)
+      {
+        fnPride();
         FastLED.show();
       }
     }
@@ -364,6 +372,46 @@ namespace Led
     }
   }
 
+  void fnPride()
+  {
+    const uint32_t num_leds = NUM_LEDS;
+
+    static uint32_t offset = 0;
+
+    const uint16_t num_colors = 11;
+    static CRGB prideColors[num_colors] =
+        {
+            CRGB::White,
+            CHSV(224, 255, 255),
+            CHSV(144, 255, 255),
+            CHSV(16, 255, 64),
+            CRGB::Black,
+            CRGB::Red,
+            CHSV(16, 255, 255),
+            CHSV(64, 255, 255),
+            CHSV(108, 255, 128),
+            CRGB::DarkBlue,
+            CHSV(198, 255, 128),
+        };
+
+    EVERY_N_MILLISECONDS(10)
+    {
+      offset = (offset + 1) % num_leds;
+    }
+
+    const uint32_t color_run_length = num_leds / num_colors; //TODO not /4
+
+    for (uint32_t i = 0; i < num_colors; i++)
+    {
+      for (uint32_t j = 0; j < color_run_length; j++)
+      {
+        pixels[(i * color_run_length + j + offset) % num_leds] = prideColors[i];
+      }
+    }
+
+    Mirror4Strips();
+  }
+
   bool togglePower(void)
   {
     return (power = !power);
@@ -399,6 +447,11 @@ namespace Led
   void testPattern()
   {
     mode = mode_testPattern;
+  }
+
+  void pride()
+  {
+    mode = mode_pride;
   }
 
   void setSolidColor(CRGB rgb)

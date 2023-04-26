@@ -11,7 +11,7 @@
 #include "genetics.h"
 
 char *itoa(int value, char *str, int base);
-void RouteIRCode(unsigned int code);
+void RouteIRCode(unsigned int code, bool fRepeat);
 
 void setup()
 {
@@ -28,26 +28,10 @@ void setup()
 
 void loop()
 {
-  static unsigned int lastIrCode = 0;
-
   Led::loop();
   if (Remote::loop())
   {
-    if (Remote::lastResult == 0xFFFFFFFF)
-    {
-      // repeat command! -- if it's a repeatable command
-      // like brightness up/down.
-      if (lastIrCode == 0xFF3AC5 ||
-          lastIrCode == 0xFFBA45)
-      {
-        RouteIRCode(lastIrCode);
-      }
-    }
-    else
-    {
-      lastIrCode = Remote::lastResult;
-      RouteIRCode(lastIrCode);
-    }
+        RouteIRCode(Remote::lastResult, Remote::fRepeat);
   }
 
   // uncomment this to check frame rate
@@ -75,7 +59,7 @@ void loop()
   }
 }
 
-void RouteIRCode(unsigned int code)
+void RouteIRCode(unsigned int code, bool fRepeat)
 {
   // IR codes: https://gist.github.com/Derpidoo/e3042055e0f5c3708f9b98b75fe4d59e
   // or just try hitting a button to see what you get :)
@@ -84,7 +68,9 @@ void RouteIRCode(unsigned int code)
 
   switch (code)
   {
-  case 0xFF02FD: // POWER
+  case 0x40: // POWER
+    
+    if (fRepeat) break;
     if (Led::togglePower())
     {
       // OLED::status(3, "Power On");
@@ -97,10 +83,10 @@ void RouteIRCode(unsigned int code)
     }
     break;
 
-  case 0xFFF00F: // AUTO - unimplemented
+  case 0xF: // AUTO - unimplemented
     break;
 
-  case 0xFF3AC5: // Brightness up
+  case 0x5C: // Brightness up
 
     sprintf(rgchBuf,
             "BRIGHTNESS %d",
@@ -109,7 +95,7 @@ void RouteIRCode(unsigned int code)
     Alnum::showOneTime(rgchBuf);
     break;
 
-  case 0xFFBA45: // Brightness down
+  case 0x5D: // Brightness down
 
     sprintf(rgchBuf,
             "BRIGHTNESS %d",
@@ -118,16 +104,16 @@ void RouteIRCode(unsigned int code)
     Alnum::showOneTime(rgchBuf);
     break;
 
-  case 0xFF30CF: // DIY1 - test pattern
+  case 0xC: // DIY1 - test pattern
     Led::testPattern();
     break;
 
-  case 0xFFB04F: // DIY2
-  case 0xFF827D: // PLAY
+  case 0xD: // DIY2
+  case 0x41: // PLAY
     Led::geneticAlgorithm();
     break;
 
-  case 0xFF708F: // DIY3 - pride
+  case 0xE: // DIY3 - pride
     Led::pride();
     break;
 
@@ -135,83 +121,83 @@ void RouteIRCode(unsigned int code)
     // Here are all the colors:
     //
 
-  case 0xFF1AE5: // RED
+  case 0x58: // RED
     Led::setSolidColor(CRGB::Red);
     break;
 
-  case 0xFF2AD5: // RED ROW 2
+  case 0x54: // RED ROW 2
     Led::setSolidColor(CHSV(16, 255, 255));
     break;
 
-  case 0xFF0AF5: // RED ROW 3
+  case 0x50: // RED ROW 3
     Led::setSolidColor(CHSV(32, 255, 255));
     break;
 
-  case 0xFF38C7: // RED ROW 4
+  case 0x1C: // RED ROW 4
     Led::setSolidColor(CHSV(48, 255, 255));
     break;
 
-  case 0xFF18E7: // RED ROW 5
+  case 0x18: // RED ROW 5
     Led::setSolidColor(CHSV(64, 255, 255));
     break;
 
-  case 0xFF9A65: // GREEN
+  case 0x59: // GREEN
     Led::setSolidColor(CRGB::Green);
     break;
 
-  case 0xFFAA55: // GREEN ROW 2
+  case 0x55: // GREEN ROW 2
     Led::setSolidColor(CHSV(108, 255, 255));
     break;
 
-  case 0xFF8A75: // GREEN ROW 3
+  case 0x51: // GREEN ROW 3
     Led::setSolidColor(CHSV(121, 255, 255));
     break;
 
-  case 0xFFB847: // GREEN ROW 4
+  case 0x1D: // GREEN ROW 4
     Led::setSolidColor(CHSV(134, 255, 255));
     break;
 
-  case 0xFF9867: // GREEN ROW 5
+  case 0x19: // GREEN ROW 5
     Led::setSolidColor(CHSV(147, 255, 255));
     break;
 
-  case 0xFFA25D: // BLUE
+  case 0x45: // BLUE
     Led::setSolidColor(CRGB::Blue);
     break;
 
-  case 0xFF926D: // BLUE ROW 2
+  case 0x49: // BLUE ROW 2
     Led::setSolidColor(CHSV(179, 255, 255));
     break;
 
-  case 0xFFB24D: // BLUE ROW 3
+  case 0x4D: // BLUE ROW 3
     Led::setSolidColor(CHSV(198, 255, 255));
     break;
 
-  case 0xFF7887: // BLUE ROW 4
+  case 0x1E: // BLUE ROW 4
     Led::setSolidColor(CHSV(217, 255, 255));
     break;
 
-  case 0xFF58A7: // BLUE ROW 5
+  case 0x1A: // BLUE ROW 5
     Led::setSolidColor(CHSV(236, 255, 255));
     break;
 
-  case 0xFF22DD: // WHITE
+  case 0x44: // WHITE
     Led::setSolidColor(CRGB::White);
     break;
 
-  case 0xFF12ED: // WHITE ROW 2
+  case 0x48: // WHITE ROW 2
     Led::setSolidColor(CRGB(192, 192, 192));
     break;
 
-  case 0xFF32CD: // WHITE ROW 3
+  case 0x4C: // WHITE ROW 3
     Led::setSolidColor(CRGB(128, 128, 128));
     break;
 
-  case 0xFFF807: // WHITE ROW 4
+  case 0x1F: // WHITE ROW 4
     Led::setSolidColor(CRGB(64, 64, 64));
     break;
 
-  case 0xFFD827: // WHITE ROW 5
+  case 0x1B: // WHITE ROW 5
     Led::setSolidColor(CRGB(32, 32, 32));
     break;
 

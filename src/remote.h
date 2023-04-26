@@ -14,6 +14,8 @@ namespace Remote
     void setup();
     bool loop();
 
-    extern unsigned long lastResult; // only valid if loop() returns true
+    // if loop() returns true look at these values:
+    extern unsigned long lastResult;
+    extern bool fRepeat;
 
 } // namespace Remote

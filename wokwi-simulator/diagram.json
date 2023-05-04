@@ -1,0 +1,327 @@
+{
+  "version": 1,
+  "author": "Uri Shaked",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-mega", "id": "mcu", "top": -1097.55, "left": 1681.9, "attrs": {} },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "a0",
+      "top": 517,
+      "left": 1046,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "75", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "a1",
+      "top": -517,
+      "left": 1038.32,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "a2",
+      "top": -1008,
+      "left": 734.3,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "a3",
+      "top": -518.2,
+      "left": 54.6,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "a4",
+      "top": -1008,
+      "left": -264.1,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "a5",
+      "top": -508.6,
+      "left": -915,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "a6",
+      "top": -998.4,
+      "left": -1233.7,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "b0",
+      "top": 517,
+      "left": 1146,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "75", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "b1",
+      "top": -23,
+      "left": 732.97,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "b2",
+      "top": -512.9,
+      "left": 257.48,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "b3",
+      "top": -19.2,
+      "left": -264.1,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "b4",
+      "top": -517,
+      "left": -746.62,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "b5",
+      "top": -19.2,
+      "left": -1224.1,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "b6",
+      "top": -508.6,
+      "left": -1711.8,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "c0",
+      "top": 517,
+      "left": 1246,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "75", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "c1",
+      "top": 668,
+      "left": 1037.6,
+      "rotate": 90,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "c2",
+      "top": 1161.6,
+      "left": 724.7,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "c3",
+      "top": 668,
+      "left": 39.2,
+      "rotate": 90,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "c4",
+      "top": 1161.6,
+      "left": -273.7,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "c5",
+      "top": 677.6,
+      "left": -920.8,
+      "rotate": 90,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "c6",
+      "top": 1180.8,
+      "left": -1224.1,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "d0",
+      "top": 517,
+      "left": 1346,
+      "rotate": 270,
+      "attrs": { "rows": "1", "cols": "75", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "d1",
+      "top": 172.8,
+      "left": 734.3,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "d2",
+      "top": 668,
+      "left": 260,
+      "rotate": 90,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "d3",
+      "top": 172.8,
+      "left": -283.3,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "d4",
+      "top": 677.6,
+      "left": -757.6,
+      "rotate": 90,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "d5",
+      "top": 182.4,
+      "left": -1233.7,
+      "rotate": 180,
+      "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "d6",
+      "top": 687.2,
+      "left": -1708,
+      "rotate": 90,
+      "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
+    },
+    {
+      "type": "wokwi-neopixel-meter",
+      "id": "meter",
+      "top": -782.5,
+      "left": 1800.37,
+      "attrs": { "pixels": "256" }
+    }
+  ],
+  "connections": [
+    [ "mcu:3", "a0:DIN", "", [] ],
+    [ "a0:DOUT", "a1:DIN", "", [] ],
+    [ "a1:DOUT", "a2:DIN", "", [] ],
+    [ "a2:DOUT", "a3:DIN", "", [] ],
+    [ "a3:DOUT", "a4:DIN", "", [] ],
+    [ "a4:DOUT", "a5:DIN", "", [] ],
+    [ "a5:DOUT", "a6:DIN", "", [] ],
+    [ "a6:DOUT", "b0:DIN", "", [] ],
+    [ "b0:DOUT", "b1:DIN", "", [] ],
+    [ "b1:DOUT", "b2:DIN", "", [] ],
+    [ "b2:DOUT", "b3:DIN", "", [] ],
+    [ "b3:DOUT", "b4:DIN", "", [] ],
+    [ "b4:DOUT", "b5:DIN", "", [] ],
+    [ "b5:DOUT", "b6:DIN", "", [] ],
+    [ "b6:DOUT", "c0:DIN", "", [] ],
+    [ "c0:DOUT", "c1:DIN", "", [] ],
+    [ "c1:DOUT", "c2:DIN", "", [] ],
+    [ "c2:DOUT", "c3:DIN", "", [] ],
+    [ "c3:DOUT", "c4:DIN", "", [] ],
+    [ "c4:DOUT", "c5:DIN", "", [] ],
+    [ "c5:DOUT", "c6:DIN", "", [] ],
+    [ "c6:DOUT", "d0:DIN", "", [] ],
+    [ "d0:DOUT", "d1:DIN", "", [] ],
+    [ "d1:DOUT", "d2:DIN", "", [] ],
+    [ "d2:DOUT", "d3:DIN", "", [] ],
+    [ "d3:DOUT", "d4:DIN", "", [] ],
+    [ "d4:DOUT", "d5:DIN", "", [] ],
+    [ "d5:DOUT", "d6:DIN", "", [] ],
+    [ "mcu:GND.1", "a0:VSS", "", [] ],
+    [ "mcu:5V", "a0:VDD", "", [] ],
+    [ "mcu:GND.1", "a1:VSS", "", [] ],
+    [ "mcu:5V", "a1:VDD", "", [] ],
+    [ "mcu:GND.1", "a2:VSS", "", [] ],
+    [ "mcu:5V", "a2:VDD", "", [] ],
+    [ "mcu:GND.1", "a3:VSS", "", [] ],
+    [ "mcu:5V", "a3:VDD", "", [] ],
+    [ "mcu:GND.1", "a4:VSS", "", [] ],
+    [ "mcu:5V", "a4:VDD", "", [] ],
+    [ "mcu:GND.1", "a5:VSS", "", [] ],
+    [ "mcu:5V", "a5:VDD", "", [] ],
+    [ "mcu:GND.1", "a6:VSS", "", [] ],
+    [ "mcu:5V", "a6:VDD", "", [] ],
+    [ "mcu:GND.1", "b0:VSS", "", [] ],
+    [ "mcu:5V", "b0:VDD", "", [] ],
+    [ "mcu:GND.1", "b1:VSS", "", [] ],
+    [ "mcu:5V", "b1:VDD", "", [] ],
+    [ "mcu:GND.1", "b2:VSS", "", [] ],
+    [ "mcu:5V", "b2:VDD", "", [] ],
+    [ "mcu:GND.1", "b3:VSS", "", [] ],
+    [ "mcu:5V", "b3:VDD", "", [] ],
+    [ "mcu:GND.1", "b4:VSS", "", [] ],
+    [ "mcu:5V", "b4:VDD", "", [] ],
+    [ "mcu:GND.1", "b5:VSS", "", [] ],
+    [ "mcu:5V", "b5:VDD", "", [] ],
+    [ "mcu:GND.1", "b6:VSS", "", [] ],
+    [ "mcu:5V", "b6:VDD", "", [] ],
+    [ "mcu:GND.1", "c0:VSS", "", [] ],
+    [ "mcu:5V", "c0:VDD", "", [] ],
+    [ "mcu:GND.1", "c1:VSS", "", [] ],
+    [ "mcu:5V", "c1:VDD", "", [] ],
+    [ "mcu:GND.1", "c2:VSS", "", [] ],
+    [ "mcu:5V", "c2:VDD", "", [] ],
+    [ "mcu:GND.1", "c3:VSS", "", [] ],
+    [ "mcu:5V", "c3:VDD", "", [] ],
+    [ "mcu:GND.1", "c4:VSS", "", [] ],
+    [ "mcu:5V", "c4:VDD", "", [] ],
+    [ "mcu:GND.1", "c5:VSS", "", [] ],
+    [ "mcu:5V", "c5:VDD", "", [] ],
+    [ "mcu:GND.1", "c6:VSS", "", [] ],
+    [ "mcu:5V", "c6:VDD", "", [] ],
+    [ "mcu:GND.1", "d0:VSS", "", [] ],
+    [ "mcu:5V", "d0:VDD", "", [] ],
+    [ "mcu:GND.1", "d1:VSS", "", [] ],
+    [ "mcu:5V", "d1:VDD", "", [] ],
+    [ "mcu:GND.1", "d2:VSS", "", [] ],
+    [ "mcu:5V", "d2:VDD", "", [] ],
+    [ "mcu:GND.1", "d3:VSS", "", [] ],
+    [ "mcu:5V", "d3:VDD", "", [] ],
+    [ "mcu:GND.1", "d4:VSS", "", [] ],
+    [ "mcu:5V", "d4:VDD", "", [] ],
+    [ "mcu:GND.1", "d5:VSS", "", [] ],
+    [ "mcu:5V", "d5:VDD", "", [] ],
+    [ "mcu:GND.1", "d6:VSS", "", [] ],
+    [ "mcu:5V", "d6:VDD", "", [] ],
+    [ "mcu:3", "meter:DIN", "", [] ]
+  ],
+  "dependencies": {}
+}

@@ -23,6 +23,7 @@ namespace Roof {
   // directly, as this array will be a different size in production vs. simulator.
 
   void SetRingColor(ring_t ring, CRGB color);   // sets an entire ring to the same color.
+  void SetGlobalColor(CRGB color);              // set the entire roof to the same color.
 
 
   void setup();

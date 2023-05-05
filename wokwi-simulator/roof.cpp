@@ -32,6 +32,14 @@ namespace Roof
       SetLed(i, color);
 
   }
+
+  void SetGlobalColor(CRGB color) {
+
+    for (ring_t ring = 0; ring < 6; ring++) {
+      SetRingColor(ring, color);
+    }
+
+  }
   
   void setup()
   {

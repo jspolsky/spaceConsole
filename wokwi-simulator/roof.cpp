@@ -5,27 +5,38 @@
 namespace Roof
 {
 
-#define NUM_LEDS 1200
+  #define NUM_LEDS 1200
 
-// LEDs pin
-#define DATA_PIN 3
-// LED brightness
-#define BRIGHTNESS 255
+  // Define the array of leds
+  CRGB leds[NUM_LEDS];
 
+  const uint32_t ring_endpoints[6][4] =
+  { { 225, 299, 525, 599 },
+    { 150, 224, 450, 524 },
+    { 75, 149, 375, 449 },
+    { 825, 899, 1125, 1199 },
+    { 750, 824, 1050, 1124 },
+    { 675, 749, 975, 1049 }
+  };
 
-// Define the array of leds
-CRGB leds[NUM_LEDS];
+  void SetRingColor(ring_t ring, CRGB color) {
 
+    for (uint32_t i = ring_endpoints[ring][0]; i <= ring_endpoints[ring][1]; i++)
+      leds[i] = color; // UNDONE go thorugh a function which does 4 at once
+    for (uint32_t i = ring_endpoints[ring][2]; i <= ring_endpoints[ring][3]; i++)
+      leds[i] = color; // UNDONE go thorugh a function which does 4 at once
 
+  }
+  
   void setup()
   {
+    const uint32_t DATA_PIN = 3;
     FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
-    FastLED.setBrightness(BRIGHTNESS);
+    FastLED.setBrightness(255);
   }
 
-  void loop()
+  void test()
   {
-
     uint32_t base = 75;
     const uint32_t d1 = 41;
     const uint32_t d2 = 34;
@@ -92,7 +103,26 @@ CRGB leds[NUM_LEDS];
       base += 150;
     }
 
+  }
 
-    FastLED.delay(10);
+  void loop()
+  {
+
+    static uint8_t hue = 0;
+    ring_t ring = 0;
+
+    EVERY_N_MILLIS(10) {
+      hue += 1;
+    }
+
+    SetRingColor(0, CHSV(hue, 255, 255));
+    SetRingColor(1, CHSV(hue + 20, 255, 255));
+    SetRingColor(2, CHSV(hue + 30, 255, 255));
+    SetRingColor(3, CHSV(hue + 50, 255, 255));
+    SetRingColor(4, CHSV(hue + 70, 255, 255));
+    SetRingColor(5, CHSV(hue + 90, 255, 255));
+    
+
+    FastLED.delay(1);
   }
 }

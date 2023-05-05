@@ -1,7 +1,6 @@
 #pragma once
 
-namespace Roof
-{
+namespace Roof {
 
   //
   // The LEDs are arranged in 6 "rings" (actually rectangles). From a bird's eye view,
@@ -20,7 +19,8 @@ namespace Roof
   typedef uint8_t ring_t;   // Ring number. There are 6 rings, numbered from 0 to 5.
 
   // These utility functions can be used by animations to set
-  // the color of LEDs.
+  // the color of LEDs. Animations should not access the leds[] array
+  // directly, as this array will be a different size in production vs. simulator.
 
   void SetRingColor(ring_t ring, CRGB color);   // sets an entire ring to the same color.
 

@@ -47,16 +47,16 @@
     {
       "type": "wokwi-neopixel-canvas",
       "id": "a5",
-      "top": -508.6,
-      "left": -915,
+      "top": -502.89,
+      "left": -966.35,
       "rotate": 270,
       "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
     },
     {
       "type": "wokwi-neopixel-canvas",
       "id": "a6",
-      "top": -998.4,
-      "left": -1233.7,
+      "top": -985.51,
+      "left": -1298.14,
       "rotate": 180,
       "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
     },
@@ -103,16 +103,16 @@
     {
       "type": "wokwi-neopixel-canvas",
       "id": "b5",
-      "top": -19.2,
-      "left": -1224.1,
+      "top": -13.49,
+      "left": -1281.15,
       "rotate": 180,
       "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
     },
     {
       "type": "wokwi-neopixel-canvas",
       "id": "b6",
-      "top": -508.6,
-      "left": -1711.8,
+      "top": -495.71,
+      "left": -1763.35,
       "rotate": 270,
       "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
     },
@@ -159,16 +159,16 @@
     {
       "type": "wokwi-neopixel-canvas",
       "id": "c5",
-      "top": 677.6,
-      "left": -920.8,
+      "top": 671.89,
+      "left": -943.62,
       "rotate": 90,
       "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
     },
     {
       "type": "wokwi-neopixel-canvas",
       "id": "c6",
-      "top": 1180.8,
-      "left": -1224.1,
+      "top": 1163.68,
+      "left": -1258.33,
       "rotate": 180,
       "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
     },
@@ -215,16 +215,16 @@
     {
       "type": "wokwi-neopixel-canvas",
       "id": "d5",
-      "top": 182.4,
-      "left": -1233.7,
+      "top": 176.69,
+      "left": -1273.64,
       "rotate": 180,
       "attrs": { "rows": "1", "cols": "34", "pixelate": "0" }
     },
     {
       "type": "wokwi-neopixel-canvas",
       "id": "d6",
-      "top": 687.2,
-      "left": -1708,
+      "top": 670.08,
+      "left": -1742.23,
       "rotate": 90,
       "attrs": { "rows": "1", "cols": "41", "pixelate": "0" }
     },

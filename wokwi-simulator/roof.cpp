@@ -1,6 +1,7 @@
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 #include "roof.h"
+#include "jetpack.h"
 
 namespace Roof
 {
@@ -39,93 +40,10 @@ namespace Roof
     FastLED.setBrightness(255);
   }
 
-  void test()
-  {
-    uint32_t base = 75;
-    const uint32_t d1 = 41;
-    const uint32_t d2 = 34;
-
-    while (base <= 975)
-    {
-
-      uint8_t brightness = 255;
-      CRGB col = CRGB::White;
-
-      for (uint32_t i = base; i < base + d1; i++)
-      {
-        leds[i] = col.scale8(brightness);
-        brightness -= 4;
-      }
-
-      brightness = 255;
-      col = CRGB::Red;
-
-      for (uint32_t i = base + d1; i < base + d1 + d2; i++)
-      {
-        leds[i] = col.scale8(brightness);
-        brightness -= 4;
-      }
-
-      base += d1 + d2;
-
-      brightness = 255;
-      col = CRGB::Green;
-
-      for (uint32_t i = base; i < base + d1; i++)
-      {
-        leds[i] = col.scale8(brightness);
-        brightness -= 4;
-      }
-
-      brightness = 255;
-      col = CRGB::Blue;
-      for (uint32_t i = base + d1; i < base + d1 + d2; i++)
-      {
-        leds[i] = col.scale8(brightness);
-        brightness -= 4;
-      }
-
-      base += d1 + d2;
-      brightness = 255;
-      col = CRGB::Magenta;
-
-      for (uint32_t i = base; i < base + d1; i++)
-      {
-        leds[i] = col.scale8(brightness);
-        brightness -= 4;
-      }
-
-      brightness = 255;
-      col = CRGB::Cyan;
-
-      for (uint32_t i = base + d1; i < base + d1 + d2; i++)
-      {
-        leds[i] = col.scale8(brightness);
-        brightness -= 4;
-      }
-
-      base += 150;
-    }
-
-  }
-
   void loop()
   {
 
-    static uint8_t hue = 0;
-    ring_t ring = 0;
-
-    EVERY_N_MILLIS(10) {
-      hue += 1;
-    }
-
-    SetRingColor(0, CHSV(hue, 255, 255));
-    SetRingColor(1, CHSV(hue + 20, 255, 255));
-    SetRingColor(2, CHSV(hue + 30, 255, 255));
-    SetRingColor(3, CHSV(hue + 50, 255, 255));
-    SetRingColor(4, CHSV(hue + 70, 255, 255));
-    SetRingColor(5, CHSV(hue + 90, 255, 255));
-    
+    Jetpack::loop();    
 
     FastLED.delay(1);
   }

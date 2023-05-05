@@ -19,12 +19,16 @@ namespace Roof
     { 675, 749, 975, 1049 }
   };
 
+  void SetLed(uint32_t i, CRGB color) {
+    leds[i] = color;
+  }
+
   void SetRingColor(ring_t ring, CRGB color) {
 
     for (uint32_t i = ring_endpoints[ring][0]; i <= ring_endpoints[ring][1]; i++)
-      leds[i] = color; // UNDONE go thorugh a function which does 4 at once
+      SetLed(i, color);
     for (uint32_t i = ring_endpoints[ring][2]; i <= ring_endpoints[ring][3]; i++)
-      leds[i] = color; // UNDONE go thorugh a function which does 4 at once
+      SetLed(i, color);
 
   }
   
